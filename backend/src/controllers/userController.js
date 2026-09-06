@@ -58,11 +58,9 @@ const loginUser = async (req, res) => {
 }
 
 const getUser = async (req, res) => {
-    const { id } = req.params;
-    userID = req.userID
-    if (userID !== id) {
-        return res.status(403).json({ message: "Access denied" })
-    }
+
+    const id = req.userID
+
 
 
     try {
