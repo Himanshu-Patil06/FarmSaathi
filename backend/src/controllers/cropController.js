@@ -1,15 +1,16 @@
-const FramerCrop = require('../models/FarmerCropModel');
+const FarmerCrop = require('../models/FarmerCropModel');
 
 const addCrop = async (req, res) => {
 
     try {
-        const { framer, crop, plantingDate } = req.body;
-        const framerCrop = await FramerCrop.create({
-            framer,
+        const { crop, plantingDate } = req.body;
+        const farmer = req.userID
+        const farmerCrop = await FarmerCrop.create({
+            farmer,
             crop,
             plantingDate
         })
-        res.status(201).json(framerCrop)
+        res.status(201).json(farmerCrop)
 
     } catch (error) {
         res.status(500).json({ message: error.message })
@@ -19,7 +20,7 @@ const addCrop = async (req, res) => {
 const getCrops = async (req, res) => {
 
     try {
-        const crops = await FramerCrop.find();
+        const crops = await FarmerCrop.find({ farmer: req.userID });
 
         res.status(200).json(crops);
     } catch (error) {
@@ -31,7 +32,10 @@ const getCrops = async (req, res) => {
 const getCropById = async (req, res) => {
     try {
         const { id } = req.params;
-        const crop = await FramerCrop.findById(id);
+        const crop = await FarmerCrop.findOne({
+            _id: id,
+            farmer: req.userID
+        });
 
         if (!crop) {
             return res.status(404).json({ message: "Crop not found" });
@@ -46,8 +50,11 @@ const getCropById = async (req, res) => {
 const updateCrop = async (req, res) => {
     try {
         const { id } = req.params;
-        const updatedCrop = await FramerCrop.findByIdAndUpdate(
-            id,
+        const updatedCrop = await FarmerCrop.findByIdAndUpdate(
+            {
+                _id: id,
+                farmer: req.userID
+            },
             req.body,
             { new: true, runValidators: true }
         );
@@ -65,7 +72,10 @@ const updateCrop = async (req, res) => {
 const deleteCrop = async (req, res) => {
     try {
         const { id } = req.params;
-        const deletedCrop = await Crop.findByIdAndDelete(id);
+        const deletedCrop = await FarmerCrop.findByIdAndDelete({
+            _id: id,
+            farmer: req.userID
+        });
 
         if (!deletedCrop) {
             return res.status(404).json({ message: "Crop not found" });

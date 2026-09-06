@@ -1,5 +1,6 @@
 const User = require('../models/UserModel');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const registerUser = async (req, res) => {
     try {
@@ -42,7 +43,13 @@ const loginUser = async (req, res) => {
         if (!isPasswordCorrect) {
             return res.status(404).json({ message: "worng password" })
         }
-
+        const token = jwt.sign({ userID: user._id }, process.env.JWT_SECRET)
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            maxAge: 7 * 24 * 60 * 60 * 1000
+        });
         res.status(200).json(user)
     } catch (error) {
         res.status(500).json({ message: error.message })
@@ -51,7 +58,11 @@ const loginUser = async (req, res) => {
 }
 
 const getUser = async (req, res) => {
-    const {id} = req.params.id;
+    const { id } = req.params;
+    userID = req.userID
+    if (userID !== id) {
+        return res.status(403).json({ message: "Access denied" })
+    }
 
 
     try {
@@ -66,7 +77,11 @@ const getUser = async (req, res) => {
 }
 
 const deleteUser = async (req, res) => {
-    const {id} = req.params.id;
+    const { id } = req.params;
+    userID = req.userID
+    if (id !== userID) {
+        return res.status(403).json({ message: "You are not authorized to delete this user" })
+    }
     try {
         const user = await User.findByIdAndDelete(id);
         if (!user) {

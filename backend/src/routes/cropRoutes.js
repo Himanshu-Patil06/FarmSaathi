@@ -1,17 +1,18 @@
 const express = require('express');
-const {addCrop,getCrops,getCropById,updateCrop,deleteCrop} = require('../controllers/cropController');
+const authMiddleware = require('../middlewares/authMiddleware')
+const { addCrop, getCrops, getCropById, updateCrop, deleteCrop } = require('../controllers/cropController');
 
 const router = express.Router();
 
-router.post("/",addCrop)
+router.post("/", authMiddleware, addCrop)
 
-router.get("/",getCrops)
+router.get("/", authMiddleware, getCrops)
 
-router.get("/:id",getCropById)
+router.get("/:id", authMiddleware, getCropById)
 
-router.delete("/:id",deleteCrop)
+router.delete("/:id", authMiddleware, deleteCrop)
 
-router.patch("/:id",updateCrop)
+router.patch("/:id", authMiddleware, updateCrop)
 
 
 module.exports = router;
