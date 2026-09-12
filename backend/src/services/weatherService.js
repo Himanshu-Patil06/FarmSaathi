@@ -1,5 +1,7 @@
+const { get } = require("mongoose");
+
 const getCoordinates = async (location) => {
-   
+
 
     const district = location;
 
@@ -28,7 +30,7 @@ const getCoordinates = async (location) => {
 }
 
 const getWeather = async (location) => {
-   
+
 
     const { latitude, longitude } = await getCoordinates(location);
     const url = `https://api.open-meteo.com/v1/forecast` +
@@ -45,15 +47,49 @@ const getWeather = async (location) => {
     }
 
     const data = await response.json();
+    return data;
 
-    return {
-        coordinates: {
-            latitude,
-            longitude
-        },
-        current: data.current,
-        daily: data.daily
-    };
+
+}
+const getWeatherCondtion = async (location) => {
+    const weatherData = await getWeather(location)
+
+
+    const weather = weatherData.daily;
+    ;
+    const rain = weather.precipitation_sum[0]
+    const rainProbability = weather.precipitation_probability_max[0];
+    const maxTemp = weather.temperature_2m_max[0];
+    const minTemp = weather.temperature_2m_min[0];
+    const conditions = [];
+    if (rain > 20) {
+        conditions.push("heavy_rain");
+    } else if (rain >= 5) {
+        conditions.push("moderate_rain");
+    } else if (rain > 0) {
+        conditions.push("light_rain");
+    }
+
+    if (rainProbability >= 80) {
+        conditions.push("high_rain_probability");
+    } else if (rainProbability >= 60) {
+        conditions.push("rain_expected");
+    }
+
+
+    if (maxTemp >= 35) {
+        conditions.push("very_high_temperature");
+    } else if (maxTemp >= 32) {
+        conditions.push("high_temperature");
+    } else if (minTemp < 15) {
+        conditions.push("very_low_temperature");
+    } else if (minTemp < 20) {
+        conditions.push("low_temperature");
+    } else {
+        conditions.push("normal_temperature");
+    }
+    return conditions;
+
 }
 
-module.exports = { getWeather }
+module.exports = { getWeatherCondtion }

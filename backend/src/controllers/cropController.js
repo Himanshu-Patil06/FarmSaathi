@@ -1,13 +1,22 @@
 const FarmerCrop = require('../models/FarmerCropModel');
+const Crop = require('../models/CropModel');
 
 const addCrop = async (req, res) => {
 
+
     try {
-        const { crop, plantingDate } = req.body;
+        const { cropName, plantingDate } = req.body;
+        const crop = await Crop.findOne({ name: cropName })
+        if (!crop.ok) {
+            console.log("Crop not found");
+
+        }
+
+
         const farmer = req.userID
         const farmerCrop = await FarmerCrop.create({
             farmer,
-            crop,
+            crop: crop._id,
             plantingDate
         })
         res.status(201).json(farmerCrop)

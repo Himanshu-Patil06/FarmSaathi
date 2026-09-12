@@ -17,11 +17,6 @@ const cropStageSchema = new mongoose.Schema(
             required: true
         },
 
-        recommendations: [
-            {
-                type: String
-            }
-        ]
     },
     {
         _id: false
