@@ -1,0 +1,205 @@
+/* =========================
+   ADD CROP PAGE
+========================= */
+
+.add-crop-page {
+    min-height: 100vh;
+    background: #f6f8f4;
+}
+
+/* =========================
+   CONTAINER
+========================= */
+
+.add-crop-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 20px 60px;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.add-crop-header {
+    margin-bottom: 25px;
+}
+
+.back-link {
+    display: inline-block;
+    color: #2e7d32;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 22px;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+.crop-title {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.crop-icon {
+    width: 55px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #e8f5e9;
+    border-radius: 50%;
+    font-size: 27px;
+}
+
+.crop-title h1 {
+    font-size: 30px;
+    color: #263328;
+    margin-bottom: 5px;
+}
+
+.crop-title p {
+    color: #707870;
+    font-size: 15px;
+}
+
+/* =========================
+   CARD
+========================= */
+
+.add-crop-card {
+    background: white;
+    border-radius: 14px;
+    padding: 32px;
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.07);
+    border: 1px solid #e5e9e3;
+}
+
+.card-heading {
+    margin-bottom: 28px;
+}
+
+.card-heading h2 {
+    font-size: 21px;
+    color: #263328;
+    margin-bottom: 7px;
+}
+
+.card-heading p {
+    color: #707870;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* =========================
+   FORM
+========================= */
+
+.add-crop-card .form-group {
+    margin-bottom: 23px;
+}
+
+.add-crop-card label {
+    display: block;
+    margin-bottom: 8px;
+    color: #3e493f;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.add-crop-card input,
+.add-crop-card select {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid #d5dcd5;
+    border-radius: 8px;
+    background: white;
+    color: #263328;
+    font-size: 15px;
+    outline: none;
+    transition: 0.2s;
+}
+
+.add-crop-card input:focus,
+.add-crop-card select:focus {
+    border-color: #2e7d32;
+    box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+}
+
+.add-crop-card small {
+    display: block;
+    margin-top: 7px;
+    color: #7a817a;
+    font-size: 12px;
+}
+
+/* =========================
+   INFO BOX
+========================= */
+
+.crop-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 14px;
+    margin: 25px 0;
+    background: #f1f8f1;
+    border: 1px solid #dcecdc;
+    border-radius: 8px;
+}
+
+.crop-info span {
+    font-size: 18px;
+}
+
+.crop-info p {
+    color: #526052;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* =========================
+   BUTTON
+========================= */
+
+.add-crop-btn {
+    width: 100%;
+    margin-top: 5px;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+    .add-crop-container {
+        padding: 25px 15px 40px;
+    }
+
+    .crop-title h1 {
+        font-size: 25px;
+    }
+
+    .crop-title p {
+        font-size: 13px;
+    }
+
+    .crop-icon {
+        width: 48px;
+        height: 48px;
+        font-size: 23px;
+    }
+
+    .add-crop-card {
+        padding: 22px 18px;
+        border-radius: 12px;
+    }
+
+    .card-heading h2 {
+        font-size: 19px;
+    }
+}

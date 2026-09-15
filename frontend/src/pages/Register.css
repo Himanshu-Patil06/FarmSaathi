@@ -1,0 +1,68 @@
+/* =========================
+   REGISTER PAGE
+========================= */
+
+.auth-page {
+    background: linear-gradient(
+        135deg,
+        #f1f8ef,
+        #ffffff
+    );
+}
+
+.register-card {
+    animation: fadeIn 0.4s ease;
+}
+
+
+/* =========================
+   REGISTER FORM
+========================= */
+
+.register-card form {
+    margin-top: 10px;
+}
+
+
+/* Put two fields side by side on larger screens */
+
+.register-card .form-row {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 15px;
+}
+
+
+/* =========================
+   ANIMATION
+========================= */
+
+@keyframes fadeIn {
+
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+    .register-card .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+}

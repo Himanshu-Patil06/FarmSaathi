@@ -1,0 +1,216 @@
+/* =========================
+   NAVBAR
+========================= */
+
+.navbar {
+    width: 100%;
+    min-height: 70px;
+
+    padding: 0 7%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    background-color: white;
+
+    border-bottom: 1px solid #e5e9e3;
+
+    position: relative;
+    z-index: 100;
+}
+
+
+/* =========================
+   LOGO
+========================= */
+
+.logo {
+    font-size: 24px;
+
+    font-weight: 700;
+
+    color: #2e7d32;
+
+    text-decoration: none;
+
+    user-select: none;
+}
+
+
+/* =========================
+   NAV LINKS
+========================= */
+
+.nav-links {
+    display: flex;
+
+    align-items: center;
+
+    gap: 25px;
+}
+
+.nav-links a {
+    color: #374137;
+
+    font-size: 15px;
+
+    font-weight: 500;
+
+    text-decoration: none;
+
+    transition: 0.2s;
+
+    user-select: none;
+}
+
+.nav-links a:hover {
+    color: #2e7d32;
+}
+
+
+/* Active page */
+
+.nav-links a.active {
+    color: #2e7d32;
+
+    font-weight: 700;
+}
+
+
+
+.nav-links .logout-btn {
+    background-color: #d32f2f;
+
+    color: white;
+
+    padding: 10px 18px;
+
+    border-radius: 7px;
+}
+
+.nav-links .logout-btn:hover {
+    background-color: #b71c1c;
+
+    color: white;
+}
+
+.nav-links .logout-btn:active {
+    background-color: #7f0000;
+
+    color: white;
+}
+/* =========================
+   MENU BUTTON
+========================= */
+
+.menu-btn {
+    display: none;
+
+    border: none;
+
+    background: transparent;
+
+    color: #2e7d32;
+
+    font-size: 28px;
+
+    cursor: pointer;
+
+    padding: 5px;
+
+    user-select: none;
+
+    -webkit-tap-highlight-color: transparent;
+}
+
+.menu-btn:focus {
+    outline: none;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 700px) {
+
+    .navbar {
+        min-height: 65px;
+
+        padding: 0 5%;
+
+        flex-direction: row;
+    }
+
+    .logo {
+        font-size: 21px;
+    }
+
+    /* Show hamburger */
+
+    .menu-btn {
+        display: block;
+    }
+
+
+    /* Hide menu */
+
+    .nav-links {
+        display: none;
+
+        position: absolute;
+
+        top: 65px;
+
+        left: 0;
+
+        width: 100%;
+
+        background-color: white;
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 0;
+
+        padding: 10px 5% 20px;
+
+        border-bottom: 1px solid #e5e9e3;
+
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.08);
+    }
+
+
+    /* Open menu */
+
+    .nav-links.menu-open {
+        display: flex;
+    }
+
+
+    /* Mobile links */
+
+    .nav-links a {
+        width: 100%;
+
+        padding: 14px 10px;
+
+        text-align: left;
+
+        border-bottom: 1px solid #f0f2ef;
+
+        font-size: 15px;
+    }
+
+
+    /* Mobile signup */
+
+    .nav-links .signup-btn {
+        margin-top: 10px;
+
+        text-align: center;
+    }
+
+}
