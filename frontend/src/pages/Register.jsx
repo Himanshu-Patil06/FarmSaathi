@@ -1,126 +1,271 @@
-function Register({ setPage, formData, handleChange, handleRegister }) {
-  return (
-    <div className="form-page">
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import "./Register.css"
 
-      <div className="form-card register-card">
+function Register() {
 
-        <div className="form-logo">🌱</div>
+    const navigate = useNavigate();
 
-        <h2>Create Farmer Account</h2>
+    const [formData, setFormData] = useState({
+        name: "",
+        mobile: "",
+        password: "",
+        village: "",
+        district: "",
+        state: "",
+        language: "mr"
+    });
 
-        <p className="form-subtitle">
-          Register with FarmSaathi
-        </p>
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
 
-        <form onSubmit={handleRegister}>
+    const handleChange = (e) => {
 
-          <label>Full Name</label>
+        const { name, value } = e.target;
 
-          <input
-            type="text"
-            name="name"
-            placeholder="Enter your full name"
-            value={formData.name}
-            onChange={handleChange}
-          />
+        setFormData({
+            ...formData,
+            [name]: value
+        });
+    };
 
-          <label>Mobile Number</label>
+    const handleRegister = async (e) => {
 
-          <input
-            type="tel"
-            name="mobile"
-            placeholder="Enter your mobile number"
-            value={formData.mobile}
-            onChange={handleChange}
-            maxLength="10"
-          />
+        e.preventDefault();
 
-          <label>Password</label>
+        setError("");
+        setLoading(true);
 
-          <input
-            type="password"
-            name="password"
-            placeholder="Create a password"
-            value={formData.password}
-            onChange={handleChange}
-          />
+        try {
 
-          <label>Village</label>
+            const response = await fetch(
+                "",
+                {
+                    method: "POST",
 
-          <input
-            type="text"
-            name="village"
-            placeholder="Enter your village"
-            value={formData.village}
-            onChange={handleChange}
-          />
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
 
-          <label>District</label>
+                    body: JSON.stringify({
+                        name: formData.name,
+                        mobile: formData.mobile,
+                        password: formData.password,
 
-          <input
-            type="text"
-            name="district"
-            placeholder="Enter your district"
-            value={formData.district}
-            onChange={handleChange}
-          />
+                        location: {
+                            village: formData.village,
+                            district: formData.district,
+                            state: formData.state
+                        },
 
-          <label>State</label>
+                        language: formData.language
+                    })
+                }
+            );
 
-          <input
-            type="text"
-            name="state"
-            placeholder="Enter your state"
-            value={formData.state}
-            onChange={handleChange}
-          />
+            const data = await response.json();
 
-          <label>Preferred Language</label>
+            if (!response.ok) {
 
-          <select
-            className="language-input"
-            name="language"
-            value={formData.language}
-            onChange={handleChange}
-          >
-            <option value="en">English</option>
-            <option value="mr">मराठी</option>
-            <option value="hi">हिंदी</option>
-          </select>
+                setError(
+                    data.message || "Registration failed"
+                );
 
-          <button
-            className="main-form-btn"
-            type="submit"
-          >
-            Create Account
-          </button>
+                return;
+            }
 
-        </form>
+            alert("Registration successful!");
 
-        <p className="switch-text">
-          Already have an account?
+            navigate("/login");
 
-          <button
-            type="button"
-            className="link-btn"
-            onClick={() => setPage("login")}
-          >
-            Login
-          </button>
-        </p>
+        } catch (error) {
 
-        <button
-          type="button"
-          className="back-btn"
-          onClick={() => setPage("home")}
-        >
-          ← Back to Home
-        </button>
+            setError("Unable to connect to server");
 
-      </div>
+        } finally {
 
-    </div>
-  );
+            setLoading(false);
+
+        }
+    };
+
+    return (
+        <div className="auth-page">
+
+            <div className="auth-card register-card">
+
+                <div className="auth-logo">
+                    🌾
+                </div>
+
+                <h1>Create Account</h1>
+
+                <p className="auth-subtitle">
+                    Join FarmSaathi
+                </p>
+
+                {error && (
+                    <div className="error-message">
+                        {error}
+                    </div>
+                )}
+
+                <form onSubmit={handleRegister}>
+
+                    {/* Name */}
+
+                    <div className="form-group">
+
+                        <label>Full Name</label>
+
+                        <input
+                            type="text"
+                            name="name"
+                            placeholder="Enter your name"
+                            value={formData.name}
+                            onChange={handleChange}
+                            required
+                        />
+
+                    </div>
+
+                    {/* Mobile */}
+
+                    <div className="form-group">
+
+                        <label>Mobile Number</label>
+
+                        <input
+                            type="tel"
+                            name="mobile"
+                            placeholder="Enter mobile number"
+                            value={formData.mobile}
+                            onChange={handleChange}
+                            required
+                        />
+
+                    </div>
+
+                    {/* Password */}
+
+                    <div className="form-group">
+
+                        <label>Password</label>
+
+                        <input
+                            type="password"
+                            name="password"
+                            placeholder="Create password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            required
+                        />
+
+                    </div>
+
+                    {/* Village */}
+
+                    <div className="form-group">
+
+                        <label>Village</label>
+
+                        <input
+                            type="text"
+                            name="village"
+                            placeholder="Enter village"
+                            value={formData.village}
+                            onChange={handleChange}
+                            required
+                        />
+
+                    </div>
+
+                    {/* District */}
+
+                    <div className="form-group">
+
+                        <label>District</label>
+
+                        <input
+                            type="text"
+                            name="district"
+                            placeholder="Enter district"
+                            value={formData.district}
+                            onChange={handleChange}
+                            required
+                        />
+
+                    </div>
+
+                    {/* State */}
+
+                    <div className="form-group">
+
+                        <label>State</label>
+
+                        <input
+                            type="text"
+                            name="state"
+                            placeholder="Enter state"
+                            value={formData.state}
+                            onChange={handleChange}
+                            required
+                        />
+
+                    </div>
+
+                    {/* Language */}
+
+                    <div className="form-group">
+
+                        <label>Preferred Language</label>
+
+                        <select
+                            name="language"
+                            value={formData.language}
+                            onChange={handleChange}
+                        >
+                            <option value="mr">
+                                मराठी
+                            </option>
+
+                            <option value="hi">
+                                हिन्दी
+                            </option>
+
+                            <option value="en">
+                                English
+                            </option>
+                        </select>
+
+                    </div>
+
+                    <button
+                        type="submit"
+                        className="primary-btn auth-btn"
+                        disabled={loading}
+                    >
+                        {loading
+                            ? "Creating Account..."
+                            : "Create Account"}
+                    </button>
+
+                </form>
+
+                <p className="auth-footer">
+
+                    Already have an account?{" "}
+
+                    <Link to="/login">
+                        Login
+                    </Link>
+
+                </p>
+
+            </div>
+
+        </div>
+    );
 }
 
 export default Register;

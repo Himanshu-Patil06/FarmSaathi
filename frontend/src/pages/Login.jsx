@@ -1,66 +1,136 @@
-function Login({ setPage, handleLogin }) {
-  return (
-    <div className="form-page">
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import "./Login.css"
+function Login() {
 
-      <div className="form-card">
+    const navigate = useNavigate();
 
-        <div className="form-logo">🌱</div>
+    const [mobile, setMobile] = useState("");
+    const [password, setPassword] = useState("");
 
-        <h2>Farmer Login</h2>
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
 
-        <p className="form-subtitle">
-          Welcome back to FarmSaathi
-        </p>
+    const handleLogin = async (e) => {
 
-        <form onSubmit={handleLogin}>
+        e.preventDefault();
 
-          <label>Mobile Number</label>
+        setError("");
+        setLoading(true);
 
-          <input
-            type="tel"
-            placeholder="Enter your mobile number"
-          />
+        try {
 
-          <label>Password</label>
+            const response = await fetch(
+                "",
+                {
+                    method: "POST",
 
-          <input
-            type="password"
-            placeholder="Enter your password"
-          />
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
 
-          <button
-            className="main-form-btn"
-            type="submit"
-          >
-            Login
-          </button>
+                    credentials: "include",
 
-        </form>
+                    body: JSON.stringify({
+                        mobile,
+                        password
+                    })
+                }
+            );
 
-        <p className="switch-text">
-          Don't have an account?
+            const data = await response.json();
 
-          <button
-            type="button"
-            className="link-btn"
-            onClick={() => setPage("register")}
-          >
-            Create Account
-          </button>
-        </p>
+            if (!response.ok) {
+                setError(data.message || "Login failed");
+                return;
+            }
 
-        <button
-          type="button"
-          className="back-btn"
-          onClick={() => setPage("home")}
-        >
-          ← Back to Home
-        </button>
+            // Login successful
+            navigate("/dashboard");
 
-      </div>
+        } catch (error) {
 
-    </div>
-  );
+            setError("Unable to connect to server");
+
+        } finally {
+
+            setLoading(false);
+
+        }
+    };
+
+    return (
+        <div className="auth-page">
+
+            <div className="auth-card">
+
+                <div className="auth-logo">
+                    🌾
+                </div>
+
+                <h1>Welcome Back</h1>
+
+                <p className="auth-subtitle">
+                    Login to your FarmSaathi account
+                </p>
+
+                {error && (
+                    <div className="error-message">
+                        {error}
+                    </div>
+                )}
+
+                <form onSubmit={handleLogin}>
+
+                    <div className="form-group">
+
+                        <label>Mobile Number</label>
+
+                        <input
+                            type="tel"
+                            placeholder="Enter mobile number"
+                            value={mobile}
+                            onChange={(e) => setMobile(e.target.value)}
+                            required
+                        />
+
+                    </div>
+
+                    <div className="form-group">
+
+                        <label>Password</label>
+
+                        <input
+                            type="password"
+                            placeholder="Enter password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+
+                    </div>
+
+                    <button
+                        type="submit"
+                        className="primary-btn auth-btn"
+                        disabled={loading}
+                    >
+                        {loading ? "Logging in..." : "Login"}
+                    </button>
+
+                </form>
+
+                <p className="auth-footer">
+                    Don't have an account?{" "}
+                    <Link to="/register">
+                        Sign Up
+                    </Link>
+                </p>
+
+            </div>
+
+        </div>
+    );
 }
 
 export default Login;

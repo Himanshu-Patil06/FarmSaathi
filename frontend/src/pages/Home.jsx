@@ -1,103 +1,119 @@
-function Home({ setPage }) {
-  return (
-    <div className="app">
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import "./Home.css";
 
-      <header className="header">
-        <div className="logo">
-          🌱 <span>FarmSaathi</span>
-        </div>
+function Home() {
+    const [menuOpen, setMenuOpen] = useState(false);
+    return (
+        <div className="home-page">
 
-        <div className="language">
-          <select>
-            <option value="en">English</option>
-            <option value="mr">मराठी</option>
-            <option value="hi">हिंदी</option>
-          </select>
-        </div>
-      </header>
+           <nav className="navbar">
 
-      <main className="hero">
+    <div className="logo">
+        🌾 FarmSaathi
+    </div>
 
-        <div className="hero-content">
+    <button
+        className="menu-btn"
+        onClick={() => setMenuOpen(!menuOpen)}
+    >
+        {menuOpen ? "✕" : "☰"}
+    </button>
 
-          <div className="farmer-icon">
-            🌾
-          </div>
+    <div className={`nav-links ${menuOpen ? "menu-open" : ""}`}>
 
-          <h1>
-            Welcome to <span>FarmSaathi</span>
-          </h1>
+        <Link to="/" onClick={() => setMenuOpen(false)}>
+            Home
+        </Link>
 
-          <p className="subtitle">
-            Smart farming assistance for better decisions,
-            better crops and a better future.
-          </p>
+        <Link to="/login" onClick={() => setMenuOpen(false)}>
+            Login
+        </Link>
 
-          <div className="buttons">
-
-            <button
-              className="login-btn"
-              onClick={() => setPage("login")}
-            >
-              Farmer Login
-            </button>
-
-            <button
-              className="register-btn"
-              onClick={() => setPage("register")}
-            >
-              Create Account
-            </button>
-
-          </div>
-
-        </div>
-
-        <div className="features">
-
-          <div className="feature-card">
-            <div className="feature-icon">🌦️</div>
-
-            <h3>Weather Information</h3>
-
-            <p>
-              Get weather information based on your location.
-            </p>
-          </div>
-
-          <div className="feature-card">
-            <div className="feature-icon">🌱</div>
-
-            <h3>Crop Management</h3>
-
-            <p>
-              Manage your crops and track their growth stages.
-            </p>
-          </div>
-
-          <div className="feature-card">
-            <div className="feature-icon">💡</div>
-
-            <h3>Smart Recommendations</h3>
-
-            <p>
-              Get simple farming suggestions based on crop
-              stage and weather.
-            </p>
-          </div>
-
-        </div>
-
-      </main>
-
-      <footer>
-        <p>
-          © 2026 FarmSaathi • Community-Based Smart Farming Assistance
-        </p>
-      </footer>
+        <Link
+            to="/register"
+            className="signup-btn"
+            onClick={() => setMenuOpen(false)}
+        >
+            Sign Up
+        </Link>
 
     </div>
-  );
+
+</nav>
+
+            <section className="hero">
+
+                <div className="hero-content">
+
+                    <h1>
+                        Your Smart Farming
+                        <span> Saathi 🌱</span>
+                    </h1>
+
+                    <p>
+                        FarmSaathi helps farmers make better farming
+                        decisions using weather information, crop stages,
+                        and personalized recommendations.
+                    </p>
+
+                    <div className="hero-buttons">
+                        <Link to="/register" className="primary-btn">
+                            Get Started
+                        </Link>
+
+                        <Link to="/login" className="secondary-btn">
+                            Login
+                        </Link>
+                    </div>
+
+                </div>
+
+                <div className="hero-image">
+                    🌾
+                </div>
+
+            </section>
+
+            <section className="features">
+
+                <h2>What FarmSaathi Provides</h2>
+
+                <div className="feature-container">
+
+                    <div className="feature-card">
+                        <div className="feature-icon">🌤️</div>
+                        <h3>Weather Updates</h3>
+                        <p>
+                            Get current weather and upcoming forecast
+                            information for your location.
+                        </p>
+                    </div>
+
+                    <div className="feature-card">
+                        <div className="feature-icon">🌱</div>
+                        <h3>Crop Management</h3>
+                        <p>
+                            Add your crops and keep track of their
+                            planting dates and growth stages.
+                        </p>
+                    </div>
+
+                    <div className="feature-card">
+                        <div className="feature-icon">💡</div>
+                        <h3>Smart Recommendations</h3>
+                        <p>
+                            Receive useful advice based on your crop stage
+                            and current weather conditions.
+                        </p>
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+    );
 }
 
 export default Home;
