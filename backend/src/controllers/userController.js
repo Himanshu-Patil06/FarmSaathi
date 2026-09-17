@@ -34,28 +34,62 @@ const loginUser = async (req, res) => {
     try {
         const { mobile, password } = req.body;
 
-        const user = await User.findOne({ mobile })
+        const user = await User.findOne({ mobile });
+
         if (!user) {
-            return res.status(404).json({ message: "user not found" })
+            return res.status(404).json({
+                message: "User not found"
+            });
         }
 
-        const isPasswordCorrect = await bcrypt.compare(password, user.password)
+        const isPasswordCorrect = await bcrypt.compare(
+            password,
+            user.password
+        );
+
         if (!isPasswordCorrect) {
-            return res.status(404).json({ message: "worng password" })
+            return res.status(401).json({
+                message: "Invalid mobile number or password"
+            });
         }
-        const token = jwt.sign({ userID: user._id }, process.env.JWT_SECRET)
+
+        const token = jwt.sign(
+            { userID: user._id },
+            process.env.JWT_SECRET,
+            { expiresIn: "7d" }
+        );
+
         res.cookie("token", token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "lax",
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
-        res.status(200).json(user)
-    } catch (error) {
-        res.status(500).json({ message: error.message })
-    }
 
-}
+        res.status(200).json({
+            message: "Login successful",
+            user: {
+                id: user._id,
+                name: user.name,
+                mobile: user.mobile,
+                location: user.location,
+                language: user.language
+            }
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
+    }
+};
+const logoutUser = (req, res) => {
+    res.clearCookie("token");
+
+    res.status(200).json({
+        message: "Logout successful"
+    });
+};
 
 const getUser = async (req, res) => {
 
@@ -93,4 +127,4 @@ const deleteUser = async (req, res) => {
 
 
 
-module.exports = { registerUser, getUser, loginUser, deleteUser };
+module.exports = { registerUser, getUser, loginUser, deleteUser, logoutUser };

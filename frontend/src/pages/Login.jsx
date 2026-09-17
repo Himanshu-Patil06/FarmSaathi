@@ -1,3 +1,4 @@
+import API_URL from "../Api/api";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Login.css"
@@ -21,7 +22,7 @@ function Login() {
         try {
 
             const response = await fetch(
-                "",
+                `${API_URL}/users/login`,
                 {
                     method: "POST",
 
@@ -45,7 +46,8 @@ function Login() {
                 return;
             }
 
-            // Login successful
+            alert("Login  successful!");
+
             navigate("/dashboard");
 
         } catch (error) {

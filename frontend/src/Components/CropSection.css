@@ -1,0 +1,361 @@
+/* =========================
+   CROPS SECTION
+========================= */
+
+.crops-section {
+    margin-bottom: 25px;
+}
+
+
+/* =========================
+   CROPS HEADER
+========================= */
+
+.crops-section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 14px;
+}
+
+.crops-title {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.crops-title span {
+    font-size: 22px;
+}
+
+.crops-title h2 {
+    font-size: 19px;
+    font-weight: 700;
+}
+
+
+/* =========================
+   ADD CROP BUTTON
+========================= */
+
+.add-crop-btn {
+    border: none;
+
+    background: #2e7d32;
+
+    color: white;
+
+    padding: 10px 16px;
+
+    border-radius: 8px;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.add-crop-btn:hover {
+    background: #256628;
+}
+
+
+/* =========================
+   CROPS LIST
+========================= */
+
+.crops-list {
+    display: flex;
+    flex-direction: column;
+
+    gap: 15px;
+}
+
+
+/* =========================
+   CROP CARD
+========================= */
+
+.crop-card {
+    background: #ffffff;
+
+    border: 1px solid #e8e8e8;
+
+    border-radius: 16px;
+
+    padding: 22px 25px;
+
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+}
+
+
+/* =========================
+   CROP HEADER
+========================= */
+
+.crop-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 25px;
+}
+
+.crop-name {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+}
+
+.crop-icon {
+    width: 45px;
+    height: 45px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #f4f8f3;
+
+    border-radius: 12px;
+
+    font-size: 25px;
+}
+
+.crop-name h3 {
+    font-size: 17px;
+
+    margin-bottom: 4px;
+}
+
+.crop-name p {
+    color: #777;
+
+    font-size: 13px;
+}
+
+
+/* =========================
+   CROP DAYS
+========================= */
+
+.crop-days {
+    display: flex;
+    flex-direction: column;
+
+    align-items: flex-end;
+}
+
+.crop-days strong {
+    font-size: 18px;
+
+    color: #333;
+}
+
+.crop-days span {
+    color: #888;
+
+    font-size: 11px;
+}
+
+
+/* =========================
+   GROWTH STAGE
+========================= */
+
+.growth-section {
+    margin-bottom: 22px;
+}
+
+.growth-title {
+    font-size: 12px;
+
+    color: #777;
+
+    margin-bottom: 17px;
+}
+
+.growth-stage {
+    position: relative;
+
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+
+    align-items: start;
+}
+
+
+/* LINE */
+
+.stage-line {
+    position: absolute;
+
+    top: 6px;
+
+    left: 10%;
+    right: 10%;
+
+    height: 3px;
+
+    background: #e4e4e4;
+
+    z-index: 0;
+}
+
+
+/* STAGE POINT */
+
+.stage-point {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+
+    z-index: 1;
+}
+
+.stage-point span {
+    width: 13px;
+    height: 13px;
+
+    background: #e0e0e0;
+
+    border: 3px solid white;
+
+    border-radius: 50%;
+
+    box-shadow: 0 0 0 1px #ddd;
+
+    margin-bottom: 8px;
+}
+
+
+/* ACTIVE STAGE */
+
+.stage-point.active span {
+    background: #2e7d32;
+
+    box-shadow: 0 0 0 1px #2e7d32;
+}
+
+.stage-point small {
+    color: #999;
+
+    font-size: 11px;
+
+    text-align: center;
+}
+
+.stage-point.active small {
+    color: #2e7d32;
+
+    font-weight: 600;
+}
+.crop-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.delete-crop-btn {
+    border: none;
+    background-color: #ffebee;
+    color: #d32f2f;
+    font-size: 14px;
+    cursor: pointer;
+    padding: 7px 12px;
+    border-radius: 6px;
+    transition: 0.2s;
+}
+
+.delete-crop-btn:hover {
+    background-color: #ffcdd2;
+}
+.no-crops {
+    background: #f8fbf8;
+    border: 1px solid #dfe9df;
+    border-radius: 10px;
+    padding: 30px 20px;
+    text-align: center;
+    margin-top: 15px;
+}
+
+.no-crops h3 {
+    margin: 0 0 8px;
+    font-size: 20px;
+    color: #2e5d34;
+}
+
+.no-crops p {
+    margin: 0 auto 20px;
+    max-width: 450px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #666;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 700px) {
+
+    .crops-section-heading {
+        align-items: center;
+    }
+
+    .add-crop-btn {
+        padding: 9px 12px;
+
+        font-size: 12px;
+    }
+
+    .crop-card {
+        padding: 18px;
+    }
+
+    .crop-header {
+        margin-bottom: 22px;
+    }
+
+    .stage-line {
+        left: 8%;
+        right: 8%;
+    }
+
+    .stage-point small {
+        font-size: 9px;
+    }
+}
+
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 450px) {
+
+    .crop-name h3 {
+        font-size: 16px;
+    }
+
+    .crop-days strong {
+        font-size: 16px;
+    }
+
+    .stage-point small {
+        font-size: 8px;
+    }
+
+    .recommendation {
+        padding: 13px;
+    }
+}

@@ -12,6 +12,28 @@ const getWeather = async (req, res) => {
         }
         const location = user.location.district;
 
+        const conditin = await weatherService.getWeather(location)
+        res.status(200).json(conditin);
+
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
+    }
+
+}
+
+const getWeatherCondition = async (req, res) => {
+
+
+    const id = req.userID;
+    try {
+        const user = await User.findById(id);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" })
+        }
+        const location = user.location.district;
+
         const conditin = await weatherService.getWeatherCondtion(location)
         res.status(200).json(conditin);
 
@@ -23,5 +45,4 @@ const getWeather = async (req, res) => {
 
 }
 
-
-module.exports = { getWeather }
+module.exports = { getWeather, getWeatherCondition }

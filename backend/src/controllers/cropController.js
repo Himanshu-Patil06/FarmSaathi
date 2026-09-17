@@ -1,11 +1,15 @@
 const FarmerCrop = require('../models/FarmerCropModel');
 const Crop = require('../models/CropModel');
+const CurrentStage = require('../services/cropStage')
+
 
 const addCrop = async (req, res) => {
 
 
     try {
         const { cropName, plantingDate } = req.body;
+       
+
         const crop = await Crop.findOne({ name: cropName })
         if (!crop.ok) {
             console.log("Crop not found");
@@ -29,9 +33,20 @@ const addCrop = async (req, res) => {
 const getCrops = async (req, res) => {
 
     try {
-        const crops = await FarmerCrop.find({ farmer: req.userID });
+        const crops = await FarmerCrop.find({ farmer: req.userID }).populate("crop");
+        const result = [];
+        for (const item of crops) {
+            const name = item.crop.name;
+            const id = item.id;
 
-        res.status(200).json(crops);
+            const currentStage = CurrentStage.getCurrentStage(
+                item.crop,
+                item.plantingDate
+            );
+            result.push({ currentStage, name, id });
+        }
+
+        res.status(200).json(result);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
