@@ -6,7 +6,7 @@ const CurrentStage = require('../services/cropStage')
 const weatherService = require('../services/weatherService')
 
 
-const getRecomendation = async (req, res) => {
+const getRecommendations = async (req, res) => {
     try {
         const farmer = req.userID
 
@@ -15,11 +15,20 @@ const getRecomendation = async (req, res) => {
             return res.status(404).json({ message: "User not found" })
         }
         const location = user.location.district;
-        const conditions = await weatherService.getWeatherCondtion(location)
+        const conditions = await weatherService.getWeatherCondition(location)
+        const conditionNames = conditions.map(
+            item => item.condition
+        );
 
         const crops = await FarmerCrop.find({ farmer }).populate("crop");
+
+
+
+
         const result = [];
+
         for (const item of crops) {
+
 
 
 
@@ -30,12 +39,17 @@ const getRecomendation = async (req, res) => {
 
             const recommendation = await Recommendation.find({
                 crop: item.crop._id,
-                stage: currentStage,
-                condition: { $in: conditions }
+                stage: currentStage.stage,
+                condition: { $in: conditionNames }
             })
             result.push({
-              
-                recommendation
+                crop: item.crop.name,
+
+                stage: currentStage.stage,
+
+                conditions: conditions,
+
+                recommendations: recommendations
             });
         }
 
@@ -51,4 +65,67 @@ const getRecomendation = async (req, res) => {
 
 }
 
-module.exports = { getRecomendation }
+const getRecommendation = async (req, res) => {
+
+    try {
+        const { id } = req.params;
+        const farmer = req.userID;
+
+
+        const user = await User.findById(farmer);
+
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found"
+            });
+        }
+
+
+        const crop = await FarmerCrop.findOne({
+            _id: id,
+            farmer: farmer
+        }).populate("crop");
+
+        if (!crop) {
+            return res.status(404).json({
+                message: "Crop not found"
+            });
+        }
+
+
+        const location = user.location.district;
+
+        const conditions = await weatherService.getWeatherCondition(location);
+        const conditionNames = conditions.map(
+            item => item.condition
+        );
+
+        const currentStage = CurrentStage.getCurrentStage(
+            crop.crop,
+            crop.plantingDate
+        );
+
+
+        const recommendations = await Recommendation.find({
+            crop: crop.crop._id,
+            stage: currentStage.stage,
+            condition: { $in: conditionNames }
+        });
+
+        res.status(200).json({
+            crop: crop.crop.name,
+            stage: currentStage.stage,
+            conditions: conditions,
+            recommendations: recommendations
+        });
+
+    } catch (error) {
+
+        console.error("Recommendation error:", error);
+
+        res.status(500).json({
+            message: "Failed to get recommendations"
+        });
+    }
+};
+module.exports = { getRecommendations, getRecommendation }

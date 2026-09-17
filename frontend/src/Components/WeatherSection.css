@@ -1,0 +1,38 @@
+
+.weather-main {
+    display: flex;
+
+    align-items: center;
+
+    gap: 20px;
+
+    margin-bottom: 20px;
+}
+
+.temperature {
+    font-size: 48px;
+
+    font-weight: 700;
+
+    color: #2e7d32;
+}
+
+.weather-main p {
+    font-size: 18px;
+
+    font-weight: 600;
+
+    color: #394439;
+
+    margin-bottom: 5px;
+}
+
+.weather-main small {
+    color: #788078;
+}
+
+.weather-card > p {
+    color: #687268;
+
+    font-size: 14px;
+}

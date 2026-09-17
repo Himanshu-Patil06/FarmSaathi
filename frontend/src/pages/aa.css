@@ -1,11 +1,6 @@
 /* =========================
    DASHBOARD
 ========================= */
-.dashboard-page {
-    min-height: 100vh;
-
-    background-color: #f6f8f4;
-}
 
 .dashboard {
     width: 100%;
@@ -50,7 +45,6 @@
     color: #2e7d32;
     font-size: 14px;
     font-weight: 600;
-    text-transform: capitalize;
 }
 
 
@@ -59,8 +53,7 @@
 ========================= */
 
 .dashboard-section {
-    margin-bottom: 30px;
-    padding:5px;
+    margin-bottom: 25px;
 }
 
 .section-title {
@@ -120,6 +113,9 @@
     color: #555;
 }
 
+.weather-icon {
+    font-size: 35px;
+}
 
 .weather-details {
     display: flex;
@@ -531,7 +527,9 @@
         font-size: 36px;
     }
 
-  
+    .weather-icon {
+        font-size: 28px;
+    }
 
     .weather-condition {
         font-size: 13px;

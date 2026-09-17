@@ -6,7 +6,7 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import AddCrop from "./pages/AddCrop";
 
-function App() {
+const App=()=> {
 
     return (
        

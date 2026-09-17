@@ -7,25 +7,64 @@ import "./AddCrop.css";
 function AddCrop() {
     const navigate = useNavigate();
 
-    const [crop, setCrop] = useState("");
+    const [cropName, setCropName] = useState("");
     const [plantingDate, setPlantingDate] = useState("");
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!crop || !plantingDate) {
+        if (!cropName || !plantingDate) {
             alert("Please select crop and planting date.");
             return;
         }
 
+        setError("");
         setLoading(true);
 
-        // API will be connected here
-        console.log({
-            crop,
-            plantingDate
-        });
+       try {
+
+
+            const response = await fetch(
+                "http://localhost:3000/crop/",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    credentials: "include",
+
+                    body: JSON.stringify({
+                        cropName,
+                        plantingDate
+                    })
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                setError(data.message || "Login failed");
+                return;
+            }
+
+            // Login successful
+            navigate("/dashboard");
+
+        } catch (error) {
+
+            setError("Unable to connect to server");
+
+        } finally {
+
+            setLoading(false);
+
+        }
+        
 
         setLoading(false);
 
@@ -65,6 +104,11 @@ function AddCrop() {
                             crop-stage and weather-based advice.
                         </p>
                     </div>
+                    {error && (
+                    <div className="error-message">
+                        {error}
+                    </div>
+                )}
 
                     <form onSubmit={handleSubmit}>
 
@@ -75,19 +119,19 @@ function AddCrop() {
 
                             <select
                                 id="crop"
-                                value={crop}
-                                onChange={(e) => setCrop(e.target.value)}
+                                value={cropName}
+                                onChange={(e) => setCropName(e.target.value)}
                                 required
                             >
                                 <option value="">
                                     Select your crop
                                 </option>
-                                <option value="rice">Rice</option>
-                                <option value="tomato">Tomato</option>
-                                <option value="chilli">Chilli</option>
-                                <option value="brinjal">Brinjal</option>
-                                <option value="wheat">Wheat</option>
-                                <option value="corn">Corn</option>
+                                <option value="Rice">Rice</option>
+                                <option value="Tomato">Tomato</option>
+                                <option value="Chilli">Chilli</option>
+                                <option value="Brinjal">Brinjal</option>
+                                <option value="Wheat">Wheat</option>
+                                <option value="Corn">Corn</option>
                             </select>
                         </div>
 

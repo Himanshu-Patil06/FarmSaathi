@@ -1,16 +1,43 @@
+import API_URL from "../Api/api";
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 
-function Navbar() {
+const Navbar=()=> {
+    
 
     const [menuOpen, setMenuOpen] = useState(false);
 
     const location = useLocation();
+    const navigate = useNavigate();
 
     const closeMenu = () => {
         setMenuOpen(false);
     };
+    const handleLogout = async () => {
+        try {
+            const response = await fetch(
+                `${API_URL}/users/logout`,
+                {
+                    method: "POST",
+                    credentials: "include"
+                }
+            );
+
+            const data = await response.json();
+
+            alert("Logout successful!");
+            
+
+            closeMenu();
+
+            // Go to login page
+            navigate("/");
+
+        } catch (error) {
+            console.error("Logout error:", error);
+        }
+    }
 
     return (
         <nav className="navbar">
@@ -65,28 +92,11 @@ function Navbar() {
                     Dashboard
                 </Link>
 
-                {/* <Link
-                    to="/mycrops"
-                    className={
-                        location.pathname === "/mycrops"
-                            ? "active"
-                            : ""
-                    }
-                    onClick={closeMenu}
-                >
-                    My Crops
-                </Link>
-
-                <Link
-                    to="/Weather"
-                    onClick={closeMenu}
-                >
-                    Weather
-                </Link> */}
+              
                 
                <button
                     className="logout-btn"
-                    // onClick={}
+                    onClick={handleLogout}
                 >
                     Logout
                 </button>

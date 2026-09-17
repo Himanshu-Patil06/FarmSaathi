@@ -1,4 +1,36 @@
-const { get } = require("mongoose");
+const getWeatherConditionCode = (code) => {
+    const conditions = {
+        0: "Clear Sky",
+        1: "Mainly Clear",
+        2: "Partly Cloudy",
+        3: "Overcast",
+
+        45: "Fog",
+        48: "Fog",
+
+        51: "Light Drizzle",
+        53: "Moderate Drizzle",
+        55: "Dense Drizzle",
+
+        61: "Light Rain",
+        63: "Moderate Rain",
+        65: "Heavy Rain",
+
+        71: "Light Snow",
+        73: "Moderate Snow",
+        75: "Heavy Snow",
+
+        80: "Light Rain Showers",
+        81: "Moderate Rain Showers",
+        82: "Heavy Rain Showers",
+
+        95: "Thunderstorm",
+        96: "Thunderstorm",
+        99: "Thunderstorm"
+    };
+
+    return conditions[code] || "Unknown";
+};
 
 const getCoordinates = async (location) => {
 
@@ -31,8 +63,8 @@ const getCoordinates = async (location) => {
 
 const getWeather = async (location) => {
 
-
     const { latitude, longitude } = await getCoordinates(location);
+
     const url = `https://api.open-meteo.com/v1/forecast` +
         `?latitude=${latitude}` +
         `&longitude=${longitude}` +
@@ -42,54 +74,150 @@ const getWeather = async (location) => {
         `&timezone=auto`;
 
     const response = await fetch(url);
+
     if (!response.ok) {
         throw new Error("Failed to fetch weather");
     }
 
     const data = await response.json();
-    return data;
+
+    return {
+        current: {
+            temperature: data.current.temperature_2m,
+            humidity: data.current.relative_humidity_2m,
+            windSpeed: data.current.wind_speed_10m,
+            condition: getWeatherConditionCode(data.current.weather_code)
+        },
+
+        dailyData: data.daily
+    };
+};
 
 
-}
-const getWeatherCondtion = async (location) => {
-    const weatherData = await getWeather(location)
 
 
-    const weather = weatherData.daily;
-    ;
-    const rain = weather.precipitation_sum[0]
-    const rainProbability = weather.precipitation_probability_max[0];
-    const maxTemp = weather.temperature_2m_max[0];
-    const minTemp = weather.temperature_2m_min[0];
+const getWeatherCondition = async (location) => {
+
+    const weatherData = await getWeather(location);
+    const weather = weatherData.dailyData;
+
     const conditions = [];
-    if (rain > 20) {
-        conditions.push("heavy_rain");
-    } else if (rain >= 5) {
-        conditions.push("moderate_rain");
-    } else if (rain > 0) {
-        conditions.push("light_rain");
+
+
+    const maxRain = Math.max(...weather.precipitation_sum);
+
+    const rainIndex = weather.precipitation_sum.indexOf(maxRain);
+
+    if (maxRain > 20) {
+
+        conditions.push({
+            condition: "heavy_rain",
+            date: weather.time[rainIndex],
+            value: maxRain
+        });
+
+    } else if (maxRain >= 5) {
+
+        conditions.push({
+            condition: "moderate_rain",
+            date: weather.time[rainIndex],
+            value: maxRain
+        });
+
+    } else if (maxRain > 0) {
+
+        conditions.push({
+            condition: "light_rain",
+            date: weather.time[rainIndex],
+            value: maxRain
+        });
     }
 
-    if (rainProbability >= 80) {
-        conditions.push("high_rain_probability");
-    } else if (rainProbability >= 60) {
-        conditions.push("rain_expected");
+
+
+    const maxRainProbability =
+        Math.max(...weather.precipitation_probability_max);
+
+    const probabilityIndex =
+        weather.precipitation_probability_max.indexOf(maxRainProbability);
+
+    if (maxRainProbability >= 80) {
+
+        conditions.push({
+            condition: "high_rain_probability",
+            date: weather.time[probabilityIndex],
+            value: maxRainProbability
+        });
+
+    } else if (maxRainProbability >= 60) {
+
+        conditions.push({
+            condition: "rain_expected",
+            date: weather.time[probabilityIndex],
+            value: maxRainProbability
+        });
     }
 
 
-    if (maxTemp >= 35) {
-        conditions.push("very_high_temperature");
-    } else if (maxTemp >= 32) {
-        conditions.push("high_temperature");
-    } else if (minTemp < 15) {
-        conditions.push("very_low_temperature");
-    } else if (minTemp < 20) {
-        conditions.push("low_temperature");
+    const highestTemperature =
+        Math.max(...weather.temperature_2m_max);
+
+    const highestTempIndex =
+        weather.temperature_2m_max.indexOf(highestTemperature);
+
+
+    if (highestTemperature >= 35) {
+
+        conditions.push({
+            condition: "very_high_temperature",
+            date: weather.time[highestTempIndex],
+            value: highestTemperature
+        });
+
+    } else if (highestTemperature >= 32) {
+
+        conditions.push({
+            condition: "high_temperature",
+            date: weather.time[highestTempIndex],
+            value: highestTemperature
+        });
+    }
+
+
+    const lowestTemperature =
+        Math.min(...weather.temperature_2m_min);
+
+    const lowestTempIndex =
+        weather.temperature_2m_min.indexOf(lowestTemperature);
+
+
+    if (lowestTemperature < 15) {
+
+        conditions.push({
+            condition: "very_low_temperature",
+            date: weather.time[lowestTempIndex],
+            value: lowestTemperature
+        });
+
+    } else if (lowestTemperature < 20) {
+
+        conditions.push({
+            condition: "low_temperature",
+            date: weather.time[lowestTempIndex],
+            value: lowestTemperature
+        });
+
     } else {
-        conditions.push("normal_temperature");
+
+        conditions.push({
+            condition: "normal_temperature",
+            date: weather.time[0],
+            value: lowestTemperature
+        });
     }
+
+
     return conditions;
+};
 
-}
-
-module.exports = { getWeatherCondtion }
+module.exports = { getWeather, getWeatherCondition }

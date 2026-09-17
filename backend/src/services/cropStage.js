@@ -9,7 +9,7 @@ const getCurrentStage = (crop, plantingDate) => {
         stage => days >= stage.startDay && days <= stage.endDay
     );
 
-    return stage ? stage.name : null;
+    return { stage: stage ? stage.name : null, days };
 };
 
 module.exports = { getCurrentStage }

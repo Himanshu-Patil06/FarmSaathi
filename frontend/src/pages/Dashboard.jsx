@@ -1,183 +1,103 @@
+import API_URL from "../Api/api";
 import { Link } from "react-router-dom";
-import "./Dashboard.css"
 import Navbar from "../Components/Navbar";
-function Dashboard() {
+import "./Dashboard.css";
+import WeatherSection from "../Components/WeatherSection";
+import CropSection from "../Components/CropSection";
+import { useEffect, useState } from "react";
 
+function Dashboard() {
+const [user, setUser] = useState(null); 
+ const [loading, setLoading] = useState(true);
+ 
+    const getUser = async () => {
+        try {
+            const response = await fetch(`${API_URL}/users/`, {
+                method: "GET",
+                credentials: "include"
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || "Failed to get user");
+            }
+
+            setUser(data);
+
+        } catch (error) {
+            console.error("Error getting user:", error);
+        }finally {
+            setLoading(false);
+        }
+    };
+    
+
+    useEffect(() => {
+        getUser();
+       
+    }, []);
+  
+    if (loading) {
+        return <h2>Loading dashboard...</h2>;
+    }
+  
+    
+    
     return (
         <div className="dashboard-page">
+            <Navbar/>
+            <div className="dashboard">
 
-            {/* Navbar */}
-
-           <Navbar/>
-
-            {/* Dashboard Content */}
-
-            <main className="dashboard-container">
-
-                <div className="welcome-section">
+                {/* HEADER */}
+                <div className="dashboard-header">
 
                     <div>
-                        <h1>
-                            Hello, Farmer! 👋
-                        </h1>
-
-                        <p>
-                            Here's your farming overview for today.
-                        </p>
+                        <h1>Hello, {user.name} 👋</h1>
+                        <p>Here is your farm update for today.</p>
                     </div>
 
                     <div className="location">
-                        📍 Palghar, Maharashtra
+                        <span>📍</span>
+                        <span>{user.location.village},{user.location.state}</span>
                     </div>
 
                 </div>
 
 
-                {/* Weather */}
-
-                <section className="dashboard-grid">
-
-                    <div className="dashboard-card weather-card">
-
-                        <div className="card-header">
-
-                            <h2>🌤️ Weather</h2>
-
-                            {/* <Link to="/weather">
-                                View More
-                            </Link> */}
-
-                        </div>
-
-                        <div className="weather-main">
-
-                            <div className="temperature">
-                                28°C
-                            </div>
-
-                            <div>
-                                <p>Partly Cloudy</p>
-                                <small>
-                                    Humidity: 76%
-                                </small>
-                            </div>
-
-                        </div>
-
-                        <p>
-                            Wind: 12.4 km/h
-                        </p>
-
+                {/* WEATHER */}
+                <div className="dashboard-section">
+                    <div className="section-title">
+                        <span>🌦️</span>
+                        <h2>Weather</h2>
                     </div>
+                     <WeatherSection/>
+                     </div>
+               
 
 
-                    {/* Crops */}
+                {/* CROPS */}
+                <div className="dashboard-section">
+                    
+                    <div className="crops-section-heading">
 
-                    <div className="dashboard-card">
-
-                        <div className="card-header">
-
-                            <h2>🌱 My Crops</h2>
-
-                            {/* <Link to="/my-crops">
-                                View All
-                            </Link> */}
-
+                        <div className="section-title">
+                            <span>🌱</span>
+                            <h2>My Crops</h2>
                         </div>
 
-                        <div className="Crop-cards">
-
-                            <div className="crop-details">
-                                <h3 className="crop-name">Rice</h3>
-                                <p className="crop-stage"> 5 days, Seedling</p>
-                            </div>
-
-                        </div>
-
-                        <Link
-                            to="/add-crop"
-                            className="dashboard-btn"
-                        >
+                        <Link 
+                        to="/add-crop"
+                        className="primary-btn">
                             + Add Crop
                         </Link>
 
                     </div>
+                    <CropSection/>
 
-                </section>
-
-
-                {/* Today's Condition */}
-
-                <section className="dashboard-card condition-card">
-
-                    <h2>
-                        🌦️ Today's Condition
-                    </h2>
-
-                    <div className="condition-content">
-
-                        <div className="condition-icon">
-                            🌤️
-                        </div>
-
-                        <div>
-
-                            <h3>
-                                Partly Cloudy
-                            </h3>
-
-                            <p>
-                                No significant rainfall expected today.
-                            </p>
-
-                        </div>
-
-                    </div>
-
-                </section>
-
-
-                {/* Recommendation */}
-
-                <section className="dashboard-card recommendation-card">
-
-                    <div className="card-header">
-
-                        <h2>
-                            💡 Today's Recommendation
-                        </h2>
-
-                        {/* <Link to="/recommendations">
-                            View All
-                        </Link> */}
-
-                    </div>
-
-                    <div className="recommendation">
-
-                        <span className="recommendation-icon">
-                            🌱
-                        </span>
-
-                        <div>
-
-                            <h3>
-                                Crop Care Advice
-                            </h3>
-
-                            <p>
-                                Check your crops regularly and monitor
-                                weather conditions before farming activities.
-                            </p>
-
-                        </div>
-
-                    </div>
-
-                </section>
-
-            </main>
-
+                </div>
+                
+            </div>
         </div>
     );
 }
