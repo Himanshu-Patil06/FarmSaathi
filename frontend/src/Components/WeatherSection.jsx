@@ -2,84 +2,68 @@ import API_URL from "../Api/api";
 import { useEffect, useState } from "react";
 import "./WeatherSection.css";
 const WeatherSection = () => {
+  const [weather, setWeather] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const getWeather = async () => {
+    try {
+      const response = await fetch(`${API_URL}/weather`, {
+        method: "GET",
+        credentials: "include",
+      });
 
-    const [weather, setWeather] = useState(null); 
-    const [loading, setLoading] = useState(true);
-    const getWeather = async () => {
-        try {
-            const response = await fetch(`${API_URL}/weather`, {
-                method: "GET",
-                credentials: "include"
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.message || "Failed to get weather");
-            }
-
-            setWeather(data);
-
-        } catch (error) {
-            console.error("Weather error:", error);
-        }finally {
-                setLoading(false);
-            }
-    };
-    useEffect(() => {
-      getWeather();
-    }, [])
-    
-     if (loading) {
-        return <h2>Loading...</h2>;
+      if (!response.ok) {
+        throw new Error(`Weather API returned ${response.status}`);
+      }
+      const data = await response.json();
+      setWeather(data);
+    } catch (error) {
+      console.error("WEATHER API ERROR:", error);
+      throw error;
+    } finally {
+      setLoading(false);
     }
-    
+  };
+  useEffect(() => {
+    getWeather();
+  }, []);
 
-    
-  const{ temperature,humidity,windSpeed,condition }=weather.current
-    
+  if (loading) {
+    return <h2>Loading...</h2>;
+  }
 
-    return (
-        <div className="weather-card">
+  const { temperature, humidity, windSpeed, condition } = weather.current;
 
-            <div className="weather-main">
+  return (
+    <div className="weather-card">
+      <div className="weather-main">
+        <div className="temperature">{temperature}°C</div>
 
-                <div className="temperature">
-                    {temperature}°C
-                </div>
-
-                <div className="weather-condition">
-                    <span>{condition}</span>
-                </div>
-
-            </div>
-
-
-            <div className="weather-details">
-
-                <div className="weather-detail">
-                    <span className="detail-icon">💧</span>
-
-                    <div>
-                        <small>Humidity</small>
-                        <strong>{humidity}</strong>
-                    </div>
-                </div>
-
-
-                <div className="weather-detail">
-                    <span className="detail-icon">💨</span>
-
-                    <div>
-                        <small>Wind</small>
-                        <strong>{windSpeed}</strong>
-                    </div>
-                </div>
-
-            </div>
-
+        <div className="weather-condition">
+          <span>{condition}</span>
         </div>
-    )
-}
+      </div>
+
+      <div className="weather-details">
+        <div className="weather-detail">
+          <span className="detail-icon">💧</span>
+
+          <div>
+            <small>Humidity</small>
+            <strong>{humidity}</strong>
+          </div>
+        </div>
+
+        <div className="weather-detail">
+          <span className="detail-icon">💨</span>
+
+          <div>
+            <small>Wind</small>
+            <strong>{windSpeed}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default WeatherSection;

@@ -33,10 +33,7 @@ const getWeatherConditionCode = (code) => {
 };
 
 const getCoordinates = async (location) => {
-
-
     const district = location;
-
 
     const url =
         `https://geocoding-api.open-meteo.com/v1/search` +
@@ -44,23 +41,36 @@ const getCoordinates = async (location) => {
         `&count=1` +
         `&language=en` +
         `&format=json`;
-    const response = await fetch(url);
-    if (!response.ok) {
-        throw new Error("failed to find loction");
 
-    }
-    const data = await response.json();
-    if (!data.results || data.results.length === 0) {
-        throw new Error("Location not found");
-    }
-    console.log("Coordinates:", data.results[0].latitude, data.results[0].longitude);
-    return {
-        latitude: data.results[0].latitude,
-        longitude: data.results[0].longitude
-    }
+    try {
+        console.log("Geocoding URL:", url);
 
+        const response = await fetch(url);
 
-}
+        console.log("Geocoding status:", response.status);
+
+        if (!response.ok) {
+            throw new Error(`Geocoding API returned ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        console.log("Geocoding result:", data.results?.[0]);
+
+        if (!data.results || data.results.length === 0) {
+            throw new Error("Location not found");
+        }
+
+        return {
+            latitude: data.results[0].latitude,
+            longitude: data.results[0].longitude
+        };
+
+    } catch (error) {
+        console.error("GEOCODING ERROR:", error);
+        throw error;
+    }
+};
 
 const getWeather = async (location) => {
 
