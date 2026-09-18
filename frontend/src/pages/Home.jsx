@@ -1,71 +1,32 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Home.css";
+import Navbar from "../Components/Navbar";
 
 function Home() {
-    const [menuOpen, setMenuOpen] = useState(false);
     return (
         <div className="home-page">
 
-           <nav className="navbar">
+            <Navbar />
 
-    <div className="logo">
-        🌾 FarmSaathi
-    </div>
-
-    <button
-        className="menu-btn"
-        onClick={() => setMenuOpen(!menuOpen)}
-    >
-        {menuOpen ? "✕" : "☰"}
-    </button>
-
-    <div className={`nav-links ${menuOpen ? "menu-open" : ""}`}>
-
-        <Link to="/" onClick={() => setMenuOpen(false)}>
-            Home
-        </Link>
-
-        <Link to="/login" onClick={() => setMenuOpen(false)}>
-            Login
-        </Link>
-
-        <Link
-            to="/register"
-            className="signup-btn"
-            onClick={() => setMenuOpen(false)}
-        >
-            Sign Up
-        </Link>
-
-    </div>
-
-</nav>
-
+            {/* HERO SECTION */}
             <section className="hero">
 
                 <div className="hero-content">
 
-                    <h1>
-                        Your Smart Farming
-                        <span> Saathi 🌱</span>
-                    </h1>
-
-                    <p>
-                        FarmSaathi helps farmers make better farming
-                        decisions using weather information, crop stages,
-                        and personalized recommendations.
+                    <p className="hero-tagline">
+                        Smart Farming, Simple Decisions
                     </p>
 
-                    <div className="hero-buttons">
-                        <Link to="/register" className="primary-btn">
-                            Get Started
-                        </Link>
+                    <h1>
+                        Farm smarter with your
+                        <span> FarmSaathi 🌱</span>
+                    </h1>
 
-                        <Link to="/login" className="secondary-btn">
-                            Login
-                        </Link>
-                    </div>
+                    <p className="hero-description">
+                        FarmSaathi helps farmers understand their crop
+                        growth and make better decisions using local
+                        weather information and crop-based recommendations.
+                    </p>
 
                 </div>
 
@@ -75,40 +36,165 @@ function Home() {
 
             </section>
 
+
+            {/* HOW IT HELPS */}
             <section className="features">
 
-                <h2>What FarmSaathi Provides</h2>
+                <p className="section-tag">
+                    FARM MANAGEMENT
+                </p>
+
+                <h2>
+                    Everything you need to understand your crops
+                </h2>
+
+                <p className="section-description">
+                    Keep your crop information in one place and get
+                    useful information based on weather and crop growth.
+                </p>
+
 
                 <div className="feature-container">
 
                     <div className="feature-card">
-                        <div className="feature-icon">🌤️</div>
-                        <h3>Weather Updates</h3>
+
+                        <div className="feature-icon">
+                            🌤️
+                        </div>
+
+                        <h3>
+                            Weather Information
+                        </h3>
+
                         <p>
-                            Get current weather and upcoming forecast
-                            information for your location.
+                            View current weather conditions and upcoming
+                            weather information for your location.
                         </p>
+
                     </div>
 
-                    <div className="feature-card">
-                        <div className="feature-icon">🌱</div>
-                        <h3>Crop Management</h3>
-                        <p>
-                            Add your crops and keep track of their
-                            planting dates and growth stages.
-                        </p>
-                    </div>
 
                     <div className="feature-card">
-                        <div className="feature-icon">💡</div>
-                        <h3>Smart Recommendations</h3>
+
+                        <div className="feature-icon">
+                            🌱
+                        </div>
+
+                        <h3>
+                            Track Your Crops
+                        </h3>
+
                         <p>
-                            Receive useful advice based on your crop stage
-                            and current weather conditions.
+                            Add your crops, record planting dates, and
+                            follow their growth stages over time.
                         </p>
+
+                    </div>
+
+
+                    <div className="feature-card">
+
+                        <div className="feature-icon">
+                            💡
+                        </div>
+
+                        <h3>
+                            Crop Recommendations
+                        </h3>
+
+                        <p>
+                            Get recommendations based on your crop's
+                            current growth stage and weather conditions.
+                        </p>
+
                     </div>
 
                 </div>
+
+            </section>
+
+
+            {/* SIMPLE PROCESS */}
+            <section className="how-it-works">
+
+                <p className="section-tag">
+                    HOW IT WORKS
+                </p>
+
+                <h2>
+                    Simple steps for better crop management
+                </h2>
+
+                <div className="steps">
+
+                    <div className="step">
+
+                        <span className="step-number">
+                            01
+                        </span>
+
+                        <h3>
+                            Add Your Crop
+                        </h3>
+
+                        <p>
+                            Select your crop and provide its planting date.
+                        </p>
+
+                    </div>
+
+
+                    <div className="step">
+
+                        <span className="step-number">
+                            02
+                        </span>
+
+                        <h3>
+                            Check the Weather
+                        </h3>
+
+                        <p>
+                            See weather conditions and upcoming forecasts
+                            for your location.
+                        </p>
+
+                    </div>
+
+
+                    <div className="step">
+
+                        <span className="step-number">
+                            03
+                        </span>
+
+                        <h3>
+                            Get Recommendations
+                        </h3>
+
+                        <p>
+                            Receive useful recommendations according to
+                            your crop stage and weather.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            {/* BOTTOM MESSAGE */}
+            <section className="home-footer">
+
+                <h2>
+                    Your crops. Your weather. Your FarmSaathi.
+                </h2>
+
+                <p>
+                    Keep track of your crops and stay informed throughout
+                    their growth.
+                </p>
 
             </section>
 

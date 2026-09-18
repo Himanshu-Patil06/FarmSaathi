@@ -24,7 +24,15 @@ const registerUser = async (req, res) => {
                 location,
                 language
             });
-        res.status(201).json(newUser);
+        res.status(201).json({
+            user: {
+                id: newUser._id,
+                name: newUser.name,
+                mobile: newUser.mobile,
+                location: newUser.location,
+                language: newUser.language
+            }
+        });
     } catch (error) {
         res.status(400).json({ message: error.message })
     }
@@ -62,7 +70,7 @@ const loginUser = async (req, res) => {
         res.cookie("token", token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
 
@@ -102,7 +110,15 @@ const getUser = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: "User not found" })
         }
-        res.status(200).json(user)
+        res.status(200).json({
+            user: {
+                id: user._id,
+                name: user.name,
+                mobile: user.mobile,
+                location: user.location,
+                language: user.language
+            }
+        })
     } catch (error) {
         res.status(500).json({ message: error.message })
     }
@@ -119,7 +135,15 @@ const deleteUser = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: "User not found" })
         }
-        res.status(200).json(user)
+        res.status(200).json({
+            user: {
+                id: user._id,
+                name: user.name,
+                mobile: user.mobile,
+                location: user.location,
+                language: user.language
+            }
+        })
     } catch (error) {
         res.status(500).json({ message: error.message })
     }

@@ -1,5 +1,3 @@
-import API_URL from "../Api/api";
-import { useEffect, useState } from "react";
 import "./RecommendationSection.css";
 
 const conditionLabels = {
@@ -52,54 +50,12 @@ const formatValue = (condition, value) => {
 };
 
 
-const RecommendationSection = (props) => {
-const id = props.cropId;
-    const [data, setData] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const getRecommendations = async () => {
+const RecommendationSection = ({
+    recommendation,
+    cropId,
+    loading
+}) => {
 
-        try {
-
-            const response = await fetch(
-                `${API_URL}/recommendation/${id}`,
-                {
-                    method: "GET",
-                    credentials: "include"
-                }
-            );
-
-            const result = await response.json();
-
-            if (!response.ok) {
-                throw new Error(
-                    result.message || "Failed to get recommendations"
-                );
-            }
-
-            setData(result);
-
-        } catch (error) {
-
-            console.error(
-                "Recommendation error:",
-                error
-            );
-
-        } finally {
-
-            setLoading(false);
-
-        }
-    };
-
-
-    useEffect(() => {
-
-        if (id) {
-            getRecommendations(id);
-        }
-
-    }, []);
 
 
     if (loading) {
@@ -112,6 +68,11 @@ const id = props.cropId;
         );
     }
 
+    const data = recommendation.find(
+        (item) => item.id === cropId
+    );
+   
+    
 
     if (!data || !data.recommendations?.length) {
         return (
@@ -123,103 +84,85 @@ const id = props.cropId;
         );
     }
 
+ 
 
-    return (
-        <div className="recommendation-section">
+   return (
+    <div className="recommendation-section">
 
-            <h3 className="recommendation-heading">
-                🌦️ Recommendations
-            </h3>
+        <h3 className="recommendation-heading">
+            🌦️ Recommendations
+        </h3>
 
+        <div className="recommendations-list">
 
-            <div className="recommendations-list">
+            {data.recommendations.map((recommendation) => {
 
-                {data.recommendations.map((recommendation) => {
+                const condition = data.conditions?.find(
+                    (item) =>
+                        item.condition === recommendation.condition
+                );
 
-                    /*
-                     * Find the weather condition
-                     * belonging to this recommendation.
-                     */
-                    const condition = data.conditions?.find(
-                        (item) =>
-                            item.condition ===
-                            recommendation.condition
-                    );
+                return (
+                    <div
+                        className="recommendation-card"
+                        key={recommendation._id}
+                    >
 
+                        <div className="recommendation-header">
 
-                    return (
-                        <div
-                            className="recommendation-card"
-                            key={recommendation._id}
-                        >
+                            <div className="recommendation-title">
 
-                            {/* HEADER */}
-
-                            <div className="recommendation-header">
-
-                                <div className="recommendation-title">
-
-                                    <span className="recommendation-icon">
-                                        {
-                                            conditionIcons[
-                                                recommendation.condition
-                                            ] || "🌱"
-                                        }
-                                    </span>
-
-                                    <div>
-
-                                        <h4>
-                                            {
-                                                conditionLabels[
-                                                    recommendation.condition
-                                                ] ||
-                                                recommendation.condition
-                                            }
-                                        </h4>
-
-                                        {condition && (
-                                            <p>
-                                                {formatValue(
-                                                    condition.condition,
-                                                    condition.value
-                                                )}
-                                                {" • "}
-                                                {formatDate(condition.date)}
-                                            </p>
-                                        )}
-
-                                    </div>
-
-                                </div>
-
-
-                                {/* PRIORITY */}
-
-                                <span
-                                    className={`priority priority-${recommendation.priority}`}
-                                >
-                                    {recommendation.priority}
+                                <span className="recommendation-icon">
+                                    {
+                                        conditionIcons[
+                                            recommendation.condition
+                                        ] || "🌱"
+                                    }
                                 </span>
+
+                                <div>
+                                    <h4>
+                                        {
+                                            conditionLabels[
+                                                recommendation.condition
+                                            ] ||
+                                            recommendation.condition
+                                        }
+                                    </h4>
+
+                                    {condition && (
+                                        <p>
+                                            {formatValue(
+                                                condition.condition,
+                                                condition.value
+                                            )}
+                                            {" • "}
+                                            {formatDate(condition.date)}
+                                        </p>
+                                    )}
+                                </div>
 
                             </div>
 
-
-                            {/* ADVICE */}
-
-                            <p className="recommendation-advice">
-                                {recommendation.advice}
-                            </p>
+                            <span
+                                className={`priority priority-${recommendation.priority}`}
+                            >
+                                {recommendation.priority}
+                            </span>
 
                         </div>
-                    );
 
-                })}
+                        <p className="recommendation-advice">
+                            {recommendation.advice}
+                        </p>
 
-            </div>
+                    </div>
+                );
+            })}
 
         </div>
-    );
+    </div>
+);
 };
 
 

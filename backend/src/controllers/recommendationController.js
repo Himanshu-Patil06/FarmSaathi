@@ -32,6 +32,7 @@ const getRecommendations = async (req, res) => {
 
 
 
+
             const currentStage = CurrentStage.getCurrentStage(
                 item.crop,
                 item.plantingDate
@@ -41,15 +42,16 @@ const getRecommendations = async (req, res) => {
                 crop: item.crop._id,
                 stage: currentStage.stage,
                 condition: { $in: conditionNames }
-            })
+            });
             result.push({
+                id: item._id,
                 crop: item.crop.name,
 
                 stage: currentStage.stage,
 
                 conditions: conditions,
 
-                recommendations: recommendations
+                recommendations: recommendation
             });
         }
 

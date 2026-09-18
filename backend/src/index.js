@@ -10,8 +10,14 @@ require('dotenv').config();
 const connectDB = require('./config/db');
 
 const app = express();
+
+const allowedOrigins = [
+    process.env.FRONTEND_URL,
+    "http://localhost:5173"
+].filter(Boolean);
+
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: allowedOrigins,
     credentials: true
 }));
 app.use(express.json());
@@ -24,6 +30,8 @@ app.use("/recommendation", recommendationRoutes)
 
 connectDB()
 
-app.listen(process.env.port, () => {
-    console.log(`Server is running on port ${process.env.port}`);
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 })

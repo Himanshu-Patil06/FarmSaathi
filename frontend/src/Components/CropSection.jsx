@@ -22,6 +22,10 @@ const stageIndexes = {
 
     const [crops,setCrops]=useState([])
     const [loading, setLoading] = useState(true);
+    
+    const [recommendation, setRecommendation] = useState([]);
+    const [recommendationLoading, setRecommendationLoading] = useState(true);
+
     const getCrops = async () => {
             try {
                 const response = await fetch(`${API_URL}/crop`, {
@@ -49,7 +53,8 @@ const stageIndexes = {
                     setLoading(false);
                 }
         };
-        const handleDelete = async (cropId) => {
+
+    const handleDelete = async (cropId) => {
             try {
                 const response = await fetch(
                     `${API_URL}/crop/${cropId}`,
@@ -74,8 +79,36 @@ const stageIndexes = {
                 console.error("Delete crop error:", error);
             }
         };
+
+   const getRecommendations = async () => {
+    try {
+        const response = await fetch(
+            `${API_URL}/recommendation/`,
+            {
+                method: "GET",
+                credentials: "include"
+            }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(
+                result.message || "Failed to get recommendations"
+            );
+        }
+
+        setRecommendation(result);
+
+    } catch (error) {
+        console.error("Recommendation error:", error);
+    } finally {
+        setRecommendationLoading(false);
+    }
+};
         useEffect(() => {
          getCrops();
+         getRecommendations();
         }, [])
         
   
@@ -196,8 +229,11 @@ const stageIndexes = {
 
 
                             {/* RECOMMENDATION */}
-                           <RecommendationSection cropId={crop.id}/>
-
+                          <RecommendationSection 
+                                recommendation={recommendation}
+                                cropId={crop.id}
+                                loading={recommendationLoading}
+                            />
                         </div>
 
                     ))}

@@ -7,7 +7,7 @@ import CropSection from "../Components/CropSection";
 import { useEffect, useState } from "react";
 
 function Dashboard() {
-const [user, setUser] = useState(null); 
+ const [user, setUser] = useState(null); 
  const [loading, setLoading] = useState(true);
  
     const getUser = async () => {
@@ -53,13 +53,13 @@ const [user, setUser] = useState(null);
                 <div className="dashboard-header">
 
                     <div>
-                        <h1>Hello, {user.name} 👋</h1>
+                        <h1>Hello, {user.user.name} 👋</h1>
                         <p>Here is your farm update for today.</p>
                     </div>
 
                     <div className="location">
                         <span>📍</span>
-                        <span>{user.location.village},{user.location.state}</span>
+                        <span>{user.user.location.village},{user.user.location.state}</span>
                     </div>
 
                 </div>

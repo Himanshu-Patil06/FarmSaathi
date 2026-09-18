@@ -7,7 +7,8 @@ const getCurrentStage = (crop, plantingDate) => {
 
     const stage = crop.stages.find(
         stage => days >= stage.startDay && days <= stage.endDay
-    );
+    ) || crop.stages.find(stage => days < stage.startDay)
+        || crop.stages[crop.stages.length - 1];
 
     return { stage: stage ? stage.name : null, days };
 };
