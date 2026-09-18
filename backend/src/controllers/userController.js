@@ -34,6 +34,11 @@ const registerUser = async (req, res) => {
             }
         });
     } catch (error) {
+        if (error.code === 11000) {
+            return res.status(409).json({
+                message: "This mobile number is already registered. Please login instead."
+            });
+        }
         res.status(400).json({ message: error.message })
     }
 }
@@ -46,7 +51,7 @@ const loginUser = async (req, res) => {
 
         if (!user) {
             return res.status(404).json({
-                message: "User not found"
+                message: "No account found with this mobile number. Please register first."
             });
         }
 
@@ -57,7 +62,7 @@ const loginUser = async (req, res) => {
 
         if (!isPasswordCorrect) {
             return res.status(401).json({
-                message: "Invalid mobile number or password"
+                message: "Invalid password"
             });
         }
 
