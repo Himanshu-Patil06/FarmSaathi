@@ -53,6 +53,7 @@ const getCoordinates = async (location) => {
     if (!data.results || data.results.length === 0) {
         throw new Error("Location not found");
     }
+    console.log("Coordinates:", data.results[0].latitude, data.results[0].longitude);
     return {
         latitude: data.results[0].latitude,
         longitude: data.results[0].longitude
@@ -80,7 +81,7 @@ const getWeather = async (location) => {
     }
 
     const data = await response.json();
-
+    console.log("Weather Data:", data);
     return {
         current: {
             temperature: data.current.temperature_2m,

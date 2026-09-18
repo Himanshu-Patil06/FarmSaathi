@@ -12,7 +12,7 @@ body {
     font-family: Arial, Helvetica, sans-serif;
     background-color: #f6f8f4;
     color: #263328;
-     user-select: none;  
+     /* user-select: none;   */
 }
 
 a {
