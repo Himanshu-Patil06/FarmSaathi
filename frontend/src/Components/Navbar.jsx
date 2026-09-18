@@ -3,162 +3,143 @@ import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 import { useEffect } from "react";
+import Notification from "./Notification";
 
-const Navbar=()=> {
-    
-    const [user, setUser] = useState(null); 
-    const [loading, setLoading] = useState(true);
-    const [menuOpen, setMenuOpen] = useState(false);
+const Navbar = () => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [menuOpen, setMenuOpen] = useState(false);
 
-    const location = useLocation();
-    const navigate = useNavigate();
+  const location = useLocation();
+  const navigate = useNavigate();
 
-    const closeMenu = () => {
-        setMenuOpen(false);
-    };
-    
- 
-    const getUser = async () => {
-        try {
-            const response = await fetch(`${API_URL}/users/`, {
-                method: "GET",
-                credentials: "include"
-            });
+  const [notification, setNotification] = useState(null);
 
-            const data = await response.json();
+  const closeMenu = () => {
+    setMenuOpen(false);
+  };
 
-            if (!response.ok) {
-                throw new Error(data.message || "Failed to get user");
-            }
+  const getUser = async () => {
+    try {
+      const response = await fetch(`${API_URL}/users/`, {
+        method: "GET",
+        credentials: "include",
+      });
 
-            setUser(data);
+      const data = await response.json();
 
-        } catch (error) {
-            console.error("Error getting user:", error);
-        }finally {
-            setLoading(false);
-        }
-    };
-    
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to get user");
+      }
 
-    useEffect(() => {
-        getUser();
-       
-    }, []);
-
-    const handleLogout = async () => {
-        try {
-            const response = await fetch(
-                `${API_URL}/users/logout`,
-                {
-                    method: "POST",
-                    credentials: "include"
-                }
-            );
-
-            const data = await response.json();
-
-            alert("Logout successful!");
-            
-setUser(null)
-            closeMenu();
-
-            // Go to login page
-            navigate("/");
-
-        } catch (error) {
-            console.error("Logout error:", error);
-        }
+      setUser(data);
+    } catch (error) {
+      console.error("Error getting user:", error);
+    } finally {
+      setLoading(false);
     }
+  };
 
-    return (
-        <nav className="navbar">
+  useEffect(() => {
+    getUser();
+  }, []);
 
-            {/* Logo */}
+  const handleLogout = async () => {
+    try {
+      const response = await fetch(`${API_URL}/users/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
 
-            <Link
-                to="/"
-                className="logo"
-                onClick={closeMenu}
-            >
-                🌾 FarmSaathi
-            </Link>
+      const data = await response.json();
 
+      setNotification({
+        message: "Logout successful!",
+        type: "success",
+      });
 
-            {/* Mobile Menu Button */}
+      setUser(null);
+      closeMenu();
 
-            <button
-                className="menu-btn"
-                onClick={() => setMenuOpen(!menuOpen)}
-                aria-label="Toggle menu"
-            >
-                {menuOpen ? "✕" : "☰"}
-            </button>
+      // Go to login page
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
 
+  return (
+    <nav className="navbar">
+      {/* Logo */}
 
-            {/* Navigation */}
-{!loading && user?(
-<div
-                className={`nav-links ${
-                    menuOpen ? "menu-open" : ""
-                }`}
-            >
+      <Link to="/" className="logo" onClick={closeMenu}>
+        🌾 FarmSaathi
+      </Link>
 
-                <Link
-                    to="/"
-                    className={location.pathname === "/" ? "active" : ""}
-                    onClick={closeMenu}
-                >
-                    Home
-                </Link>
+      {/* Mobile Menu Button */}
 
-                <Link
-                    to="/dashboard"
-                    className={
-                        location.pathname === "/dashboard"
-                            ? "active"
-                            : ""
-                    }
-                    onClick={closeMenu}
-                >
-                    Dashboard
-                </Link>
+      <button
+        className="menu-btn"
+        onClick={() => setMenuOpen(!menuOpen)}
+        aria-label="Toggle menu"
+      >
+        {menuOpen ? "✕" : "☰"}
+      </button>
 
-              
-                
-               <button
-                    className="logout-btn"
-                    onClick={handleLogout}
-                >
-                    Logout
-                </button>
-
-            </div>
-):(
-    <div className={`nav-links ${menuOpen ? "menu-open" : ""}`}>
-
-        <Link to="/" onClick={() => setMenuOpen(false)}>
+      {/* Navigation */}
+      {!loading && user ? (
+        <div className={`nav-links ${menuOpen ? "menu-open" : ""}`}>
+          <Link
+            to="/"
+            className={location.pathname === "/" ? "active" : ""}
+            onClick={closeMenu}
+          >
             Home
-        </Link>
+          </Link>
 
-        <Link to="/login" onClick={() => setMenuOpen(false)}>
+          <Link
+            to="/dashboard"
+            className={location.pathname === "/dashboard" ? "active" : ""}
+            onClick={closeMenu}
+          >
+            Dashboard
+          </Link>
+
+          <button className="logout-btn" onClick={handleLogout}>
+            Logout
+          </button>
+        </div>
+      ) : (
+        <div className={`nav-links ${menuOpen ? "menu-open" : ""}`}>
+          <Link to="/" onClick={() => setMenuOpen(false)}>
+            Home
+          </Link>
+
+          <Link to="/login" onClick={() => setMenuOpen(false)}>
             Login
-        </Link>
+          </Link>
 
-        <Link
+          <Link
             to="/register"
             className="signup-btn"
             onClick={() => setMenuOpen(false)}
-        >
+          >
             Sign Up
-        </Link>
+          </Link>
+        </div>
+      )}
 
-    </div>
-)}
-            
+      {notification && (
+        <Notification
+          message={notification.message}
+          type={notification.type}
+          onClose={() => setNotification(null)}
+        />
+      )}
+    </nav>
+  );
+};
 
-        </nav>
-    );
-}
-
-export default Navbar; 
+export default Navbar;

@@ -1,138 +1,122 @@
 import API_URL from "../Api/api";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "./Login.css"
+import "./Login.css";
+import Notification from "../Components/Notification";
 function Login() {
+  const navigate = useNavigate();
 
-    const navigate = useNavigate();
+  const [mobile, setMobile] = useState("");
+  const [password, setPassword] = useState("");
 
-    const [mobile, setMobile] = useState("");
-    const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-    const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
+  const [notification, setNotification] = useState(null);
 
-    const handleLogin = async (e) => {
+  const handleLogin = async (e) => {
+    e.preventDefault();
 
-        e.preventDefault();
+    setError("");
+    setLoading(true);
 
-        setError("");
-        setLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/users/login`, {
+        method: "POST",
 
-        try {
+        headers: {
+          "Content-Type": "application/json",
+        },
 
-            const response = await fetch(
-                `${API_URL}/users/login`,
-                {
-                    method: "POST",
+        credentials: "include",
 
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
+        body: JSON.stringify({
+          mobile,
+          password,
+        }),
+      });
 
-                    credentials: "include",
+      const data = await response.json();
 
-                    body: JSON.stringify({
-                        mobile,
-                        password
-                    })
-                }
-            );
+      if (!response.ok) {
+        setError(data.message || "Login failed");
+        return;
+      }
 
-            const data = await response.json();
+      setNotification({
+        message: "Login successful!",
+        type: "success",
+      });
 
-            if (!response.ok) {
-                setError(data.message || "Login failed");
-                return;
-            }
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 1000);
+    } catch (error) {
+      setError("Unable to connect to server");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-            alert("Login  successful!");
+  return (
+    <div className="auth-page">
+      {notification && (
+        <Notification
+          message={notification.message}
+          type={notification.type}
+          onClose={() => setNotification(null)}
+        />
+      )}
 
-            navigate("/dashboard");
+      <div className="auth-card">
+        <div className="auth-logo">🌾</div>
 
-        } catch (error) {
+        <h1>Welcome Back</h1>
 
-            setError("Unable to connect to server");
+        <p className="auth-subtitle">Login to your FarmSaathi account</p>
 
-        } finally {
+        {error && <div className="error-message">{error}</div>}
 
-            setLoading(false);
+        <form onSubmit={handleLogin}>
+          <div className="form-group">
+            <label>Mobile Number</label>
 
-        }
-    };
+            <input
+              type="tel"
+              placeholder="Enter mobile number"
+              value={mobile}
+              onChange={(e) => setMobile(e.target.value)}
+              required
+            />
+          </div>
 
-    return (
-        <div className="auth-page">
+          <div className="form-group">
+            <label>Password</label>
 
-            <div className="auth-card">
+            <input
+              type="password"
+              placeholder="Enter password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
 
-                <div className="auth-logo">
-                    🌾
-                </div>
+          <button
+            type="submit"
+            className="primary-btn auth-btn"
+            disabled={loading}
+          >
+            {loading ? "Logging in..." : "Login"}
+          </button>
+        </form>
 
-                <h1>Welcome Back</h1>
-
-                <p className="auth-subtitle">
-                    Login to your FarmSaathi account
-                </p>
-
-                {error && (
-                    <div className="error-message">
-                        {error}
-                    </div>
-                )}
-
-                <form onSubmit={handleLogin}>
-
-                    <div className="form-group">
-
-                        <label>Mobile Number</label>
-
-                        <input
-                            type="tel"
-                            placeholder="Enter mobile number"
-                            value={mobile}
-                            onChange={(e) => setMobile(e.target.value)}
-                            required
-                        />
-
-                    </div>
-
-                    <div className="form-group">
-
-                        <label>Password</label>
-
-                        <input
-                            type="password"
-                            placeholder="Enter password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                        />
-
-                    </div>
-
-                    <button
-                        type="submit"
-                        className="primary-btn auth-btn"
-                        disabled={loading}
-                    >
-                        {loading ? "Logging in..." : "Login"}
-                    </button>
-
-                </form>
-
-                <p className="auth-footer">
-                    Don't have an account?{" "}
-                    <Link to="/register">
-                        Sign Up
-                    </Link>
-                </p>
-
-            </div>
-
-        </div>
-    );
+        <p className="auth-footer">
+          Don't have an account? <Link to="/register">Sign Up</Link>
+        </p>
+      </div>
+    </div>
+  );
 }
 
 export default Login;

@@ -1,0 +1,55 @@
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    min-width: 280px;
+    padding: 14px 18px;
+
+    border-radius: 8px;
+    background-color: white;
+
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+
+    z-index: 1000;
+}
+
+.notification span {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.notification p {
+    margin: 0;
+    flex: 1;
+    font-size: 14px;
+}
+
+.notification button {
+    border: none;
+    background: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* Success */
+.notification.success {
+    border-left: 5px solid #2e7d32;
+}
+
+.notification.success span {
+    color: #2e7d32;
+}
+
+/* Error */
+.notification.error {
+    border-left: 5px solid #d32f2f;
+}
+
+.notification.error span {
+    color: #d32f2f;
+}
