@@ -1,3 +1,4 @@
+import API_URL from "../Api/api";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../Components/Navbar";
@@ -28,7 +29,7 @@ function AddCrop() {
 
 
             const response = await fetch(
-                "http://localhost:3000/crop/",
+                `${API_URL}/crop/`,
                 {
                     method: "POST",
 
