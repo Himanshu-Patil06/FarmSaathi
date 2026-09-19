@@ -26,17 +26,6 @@
     margin-bottom: 25px;
 }
 
-.back-link {
-    display: inline-block;
-    color: #2e7d32;
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 22px;
-}
-
-.back-link:hover {
-    text-decoration: underline;
-}
 
 .crop-title {
     display: flex;
@@ -168,6 +157,18 @@
 .add-crop-btn {
     width: 100%;
     margin-top: 5px;
+}
+
+.back-link {
+    display: inline-block;
+    color: #2e7d32;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 22px;
+}
+
+.back-link:hover {
+    text-decoration: underline;
 }
 
 /* =========================

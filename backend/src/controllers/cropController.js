@@ -8,14 +8,13 @@ const addCrop = async (req, res) => {
 
     try {
         const { cropName, plantingDate } = req.body;
-       
+
 
         const crop = await Crop.findOne({ name: cropName })
-        if (!crop.ok) {
-            console.log("Crop not found");
+        if (!crop) {
+            return res.status(404).json({ message: "Crop not found" });
 
         }
-
 
         const farmer = req.userID
         const farmerCrop = await FarmerCrop.create({

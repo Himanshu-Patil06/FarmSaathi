@@ -43,19 +43,15 @@ const getCoordinates = async (location) => {
         `&format=json`;
 
     try {
-        console.log("Geocoding URL:", url);
 
         const response = await fetch(url);
 
-        console.log("Geocoding status:", response.status);
 
         if (!response.ok) {
             throw new Error(`Geocoding API returned ${response.status}`);
         }
 
         const data = await response.json();
-
-        console.log("Geocoding result:", data.results?.[0]);
 
         if (!data.results || data.results.length === 0) {
             throw new Error("Location not found");
@@ -91,7 +87,7 @@ const getWeather = async (location) => {
     }
 
     const data = await response.json();
-    console.log("Weather Data:", data);
+
     return {
         current: {
             temperature: data.current.temperature_2m,

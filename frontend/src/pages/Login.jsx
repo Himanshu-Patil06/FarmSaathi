@@ -69,6 +69,10 @@ function Login() {
       )}
 
       <div className="auth-card">
+        <Link to="/" className="back-link">
+          ← Home
+        </Link>
+
         <div className="auth-logo">🌾</div>
 
         <h1>Welcome Back</h1>

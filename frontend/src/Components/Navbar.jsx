@@ -52,7 +52,9 @@ const Navbar = () => {
       });
 
       const data = await response.json();
-
+      if (!response.ok) {
+        throw new Error(data.message || "Logout failed");
+      }
       setNotification({
         message: "Logout successful!",
         type: "success",

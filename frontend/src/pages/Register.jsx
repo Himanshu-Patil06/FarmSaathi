@@ -22,7 +22,6 @@ function Register() {
 
   const [notification, setNotification] = useState(null);
 
-
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -85,15 +84,17 @@ function Register() {
 
   return (
     <div className="auth-page">
-        {notification && (
+      {notification && (
         <Notification
           message={notification.message}
           type={notification.type}
           onClose={() => setNotification(null)}
         />
-    
       )}
       <div className="auth-card register-card">
+        <Link to="/" className="back-link">
+          ← Home
+        </Link>
         <div className="auth-logo">🌾</div>
 
         <h1>Create Account</h1>
