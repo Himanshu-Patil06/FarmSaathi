@@ -89,18 +89,28 @@ const getWeather = async (location) => {
     console.log(" start feching weather data");
 
     const response = await fetch(url);
-    console.log(" compelet feching weather data");
+    console.log("Weather fetch completed");
+    console.log("Weather status:", response.status);
+    console.log("Weather status text:", response.statusText);
+    console.log("Weather URL:", url);
+    console.log("Weather OK:", response.ok);
+    console.log("Weather content type:", response.headers.get("content-type"));
+
     if (!response.ok) {
-        throw new Error("Failed to fetch weather");
+        const errorText = await response.text();
+
+        console.error("WEATHER API ERROR BODY:", errorText);
+
+        throw new Error(
+            `Weather API returned ${response.status}: ${errorText}`
+        );
     }
+
     console.log("Weather response received");
-    console.log("Status:", response.status);
-    console.log("Content-Type:", response.headers.get("content-type"));
 
     const data = await response.json();
 
     console.log("Weather JSON received");
-    console.log(data);
 
     return {
         current: {
