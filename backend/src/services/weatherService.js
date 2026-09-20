@@ -93,10 +93,14 @@ const getWeather = async (location) => {
     if (!response.ok) {
         throw new Error("Failed to fetch weather");
     }
+    console.log("Weather response received");
+    console.log("Status:", response.status);
+    console.log("Content-Type:", response.headers.get("content-type"));
 
     const data = await response.json();
-    console.log("Data: ", data);
-    console.log("Current Weather: ", data.current);
+
+    console.log("Weather JSON received");
+    console.log(data);
 
     return {
         current: {
