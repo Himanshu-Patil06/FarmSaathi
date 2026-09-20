@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Register.css";
 import Notification from "../Components/Notification";
+import { states } from "../Data/locations";
 
 function Register() {
   const navigate = useNavigate();
@@ -21,6 +22,7 @@ function Register() {
   const [loading, setLoading] = useState(false);
 
   const [notification, setNotification] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -31,6 +33,14 @@ function Register() {
     });
   };
 
+  const handleStateChange = (e) => {
+    const { name, value } = e.target;
+
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
   const handleRegister = async (e) => {
     e.preventDefault();
 
@@ -130,6 +140,10 @@ function Register() {
               placeholder="Enter mobile number"
               value={formData.mobile}
               onChange={handleChange}
+              pattern="[0-9]{10}"
+              title="Please enter a valid 10-digit mobile number."
+              maxLength="10"
+              inputMode="numeric"
               required
             />
           </div>
@@ -139,14 +153,71 @@ function Register() {
           <div className="form-group">
             <label>Password</label>
 
-            <input
-              type="password"
-              name="password"
-              placeholder="Create password"
-              value={formData.password}
-              onChange={handleChange}
+            <div className="password-wrapper">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="Create password"
+                value={formData.password}
+                onChange={handleChange}
+                pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}"
+                title="Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number and one special character."
+                required
+              />
+
+              <button
+                type="button"
+                className="show-password-btn"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? "Hide" : "Show"}
+              </button>
+            </div>
+          </div>
+
+          {/* State */}
+          <div className="form-group">
+            <label>State</label>
+
+            <select
+              name="state"
+              value={formData.state}
+              onChange={handleStateChange}
               required
-            />
+            >
+              <option value="">Select State</option>
+
+              {Object.keys(states).map((state) => (
+                <option key={state} value={state}>
+                  {state}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* District */}
+
+          <div className="form-group">
+            <label>District</label>
+
+            <select
+              name="district"
+              value={formData.district}
+              onChange={handleChange}
+              disabled={!formData.state}
+              required
+            >
+              <option value="">
+                {formData.state ? "Select District" : "Select State First"}
+              </option>
+
+              {formData.state &&
+                states[formData.state].map((district) => (
+                  <option key={district} value={district}>
+                    {district}
+                  </option>
+                ))}
+            </select>
           </div>
 
           {/* Village */}
@@ -159,36 +230,6 @@ function Register() {
               name="village"
               placeholder="Enter village"
               value={formData.village}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          {/* District */}
-
-          <div className="form-group">
-            <label>District</label>
-
-            <input
-              type="text"
-              name="district"
-              placeholder="Enter district"
-              value={formData.district}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          {/* State */}
-
-          <div className="form-group">
-            <label>State</label>
-
-            <input
-              type="text"
-              name="state"
-              placeholder="Enter state"
-              value={formData.state}
               onChange={handleChange}
               required
             />
