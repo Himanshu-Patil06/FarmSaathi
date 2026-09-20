@@ -45,9 +45,11 @@ const getCoordinates = async (location) => {
         `&format=json`;
 
     try {
+        console.log(" start feching coordinates from: ", url);
 
         const response = await fetch(url);
 
+        console.log(" complete feching coordinates from: ", url);
 
         if (!response.ok) {
             throw new Error(`Geocoding API returned ${response.status}`);
@@ -72,7 +74,7 @@ const getCoordinates = async (location) => {
 
 const getWeather = async (location) => {
     console.log("In getweather");
-    
+
 
     const { latitude, longitude } = await getCoordinates(location);
 
@@ -83,16 +85,18 @@ const getWeather = async (location) => {
         `&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max` +
         `&forecast_days=7` +
         `&timezone=auto`;
+    console.log(" start feching weather data from: ", url);
 
     const response = await fetch(url);
+    console.log(" compelet feching weather data from: ", url);
 
     if (!response.ok) {
         throw new Error("Failed to fetch weather");
     }
 
     const data = await response.json();
-    console.log("Data: " , data);
-    
+    console.log("Data: ", data);
+
 
     return {
         current: {
