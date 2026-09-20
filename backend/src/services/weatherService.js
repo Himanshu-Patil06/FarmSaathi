@@ -33,6 +33,8 @@ const getWeatherConditionCode = (code) => {
 };
 
 const getCoordinates = async (location) => {
+    console.log("In getCorrdinats");
+
     const district = location;
 
     const url =
@@ -69,6 +71,8 @@ const getCoordinates = async (location) => {
 };
 
 const getWeather = async (location) => {
+    console.log("In getweather");
+    
 
     const { latitude, longitude } = await getCoordinates(location);
 
@@ -87,6 +91,8 @@ const getWeather = async (location) => {
     }
 
     const data = await response.json();
+    console.log("Data: " , data);
+    
 
     return {
         current: {
