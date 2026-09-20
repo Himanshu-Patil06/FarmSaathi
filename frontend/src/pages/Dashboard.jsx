@@ -86,7 +86,7 @@ function Dashboard() {
               + Add Crop
             </Link>
           </div>
-          <CropSection />
+          {/* <CropSection /> */}
         </div>
       </div>
     </div>

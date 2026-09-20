@@ -36,6 +36,7 @@ const getCoordinates = async (location) => {
     console.log("In getCorrdinats");
 
     const district = location;
+    console.log("District: ", district);
 
     const url =
         `https://geocoding-api.open-meteo.com/v1/search` +
@@ -45,12 +46,12 @@ const getCoordinates = async (location) => {
         `&format=json`;
 
     try {
-        console.log(" start feching coordinates from: ", url);
+        console.log(" start feching coordinates ");
 
         const response = await fetch(url);
 
-        console.log(" complete feching coordinates from: ", url);
-
+        console.log(" complete feching coordinates ");
+        console.log("Response: ", response);
         if (!response.ok) {
             throw new Error(`Geocoding API returned ${response.status}`);
         }
@@ -60,7 +61,7 @@ const getCoordinates = async (location) => {
         if (!data.results || data.results.length === 0) {
             throw new Error("Location not found");
         }
-
+        console.log("Coordinates: ", data.results[0].latitude, data.results[0].longitude);
         return {
             latitude: data.results[0].latitude,
             longitude: data.results[0].longitude
@@ -77,7 +78,7 @@ const getWeather = async (location) => {
 
 
     const { latitude, longitude } = await getCoordinates(location);
-
+    console.log("Coordinates: ", latitude, longitude);
     const url = `https://api.open-meteo.com/v1/forecast` +
         `?latitude=${latitude}` +
         `&longitude=${longitude}` +
@@ -85,18 +86,17 @@ const getWeather = async (location) => {
         `&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max` +
         `&forecast_days=7` +
         `&timezone=auto`;
-    console.log(" start feching weather data from: ", url);
+    console.log(" start feching weather data");
 
     const response = await fetch(url);
-    console.log(" compelet feching weather data from: ", url);
-
+    console.log(" compelet feching weather data");
     if (!response.ok) {
         throw new Error("Failed to fetch weather");
     }
 
     const data = await response.json();
     console.log("Data: ", data);
-
+    console.log("Current Weather: ", data.current);
 
     return {
         current: {
