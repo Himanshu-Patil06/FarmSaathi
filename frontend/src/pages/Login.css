@@ -24,6 +24,32 @@
 .auth-card form {
     margin-top: 10px;
 }
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 65px;
+}
+
+.show-password-btn {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  color: #2e7d32;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.show-password-btn:hover {
+  color: #1b5e20;
+}
 
 
 /* =========================
