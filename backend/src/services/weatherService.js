@@ -1,3 +1,6 @@
+const weatherCache = new Map();
+const WEATHER_CACHE_TTL = 24 * 60 * 60 * 1000;
+
 const getWeatherConditionCode = (code) => {
     const conditions = {
         0: "Clear Sky",
@@ -33,10 +36,7 @@ const getWeatherConditionCode = (code) => {
 };
 
 const getCoordinates = async (location) => {
-    console.log("In getCorrdinats");
-
     const district = location;
-    console.log("District: ", district);
 
     const url =
         `https://geocoding-api.open-meteo.com/v1/search` +
@@ -46,12 +46,7 @@ const getCoordinates = async (location) => {
         `&format=json`;
 
     try {
-        console.log(" start feching coordinates ");
-
         const response = await fetch(url);
-
-        console.log(" complete feching coordinates ");
-        console.log("Response: ", response);
         if (!response.ok) {
             throw new Error(`Geocoding API returned ${response.status}`);
         }
@@ -61,7 +56,6 @@ const getCoordinates = async (location) => {
         if (!data.results || data.results.length === 0) {
             throw new Error("Location not found");
         }
-        console.log("Coordinates: ", data.results[0].latitude, data.results[0].longitude);
         return {
             latitude: data.results[0].latitude,
             longitude: data.results[0].longitude
@@ -74,11 +68,32 @@ const getCoordinates = async (location) => {
 };
 
 const getWeather = async (location) => {
-    console.log("In getweather");
+    const cacheKey = location.trim().toLowerCase();
+    const cachedWeather = weatherCache.get(cacheKey);
 
+    if (cachedWeather && cachedWeather.expiresAt > Date.now()) {
+        return cachedWeather.promise;
+    }
 
+    const weatherPromise = fetchWeather(location).catch((error) => {
+        weatherCache.delete(cacheKey);
+        throw error;
+    });
+
+    weatherCache.set(cacheKey, {
+        promise: weatherPromise,
+        expiresAt: Date.now() + WEATHER_CACHE_TTL
+    });
+
+    return weatherPromise;
+};
+
+const clearWeatherCache = (location) => {
+    weatherCache.delete(location.trim().toLowerCase());
+};
+
+const fetchWeather = async (location) => {
     const { latitude, longitude } = await getCoordinates(location);
-    console.log("Coordinates: ", latitude, longitude);
     const url = `https://api.open-meteo.com/v1/forecast` +
         `?latitude=${latitude}` +
         `&longitude=${longitude}` +
@@ -86,15 +101,7 @@ const getWeather = async (location) => {
         `&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max` +
         `&forecast_days=7` +
         `&timezone=auto`;
-    console.log(" start feching weather data");
-
     const response = await fetch(url);
-    console.log("Weather fetch completed");
-    console.log("Weather status:", response.status);
-    console.log("Weather status text:", response.statusText);
-    console.log("Weather URL:", url);
-    console.log("Weather OK:", response.ok);
-    console.log("Weather content type:", response.headers.get("content-type"));
 
     if (!response.ok) {
         const errorText = await response.text();
@@ -106,11 +113,7 @@ const getWeather = async (location) => {
         );
     }
 
-    console.log("Weather response received");
-
     const data = await response.json();
-
-    console.log("Weather JSON received");
 
     return {
         current: {
@@ -251,4 +254,4 @@ const getWeatherCondition = async (location) => {
     return conditions;
 };
 
-module.exports = { getWeather, getWeatherCondition }
+module.exports = { getWeather, getWeatherCondition, clearWeatherCache }

@@ -13,8 +13,6 @@ const getWeather = async (req, res) => {
         const location = user.location.district;
 
         const conditin = await weatherService.getWeather(location)
-        console.log("Condtion: ", conditin);
-
         res.status(200).json(conditin);
 
     } catch (error) {
@@ -36,7 +34,7 @@ const getWeatherCondition = async (req, res) => {
         }
         const location = user.location.district;
 
-        const conditin = await weatherService.getWeatherCondtion(location)
+        const conditin = await weatherService.getWeatherCondition(location)
         res.status(200).json(conditin);
 
     } catch (error) {

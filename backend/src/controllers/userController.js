@@ -1,6 +1,7 @@
 const User = require('../models/UserModel');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const weatherService = require('../services/weatherService');
 
 const registerUser = async (req, res) => {
     try {
@@ -96,7 +97,13 @@ const loginUser = async (req, res) => {
         });
     }
 };
-const logoutUser = (req, res) => {
+const logoutUser = async (req, res) => {
+    const user = await User.findById(req.userID);
+
+    if (user?.location?.district) {
+        weatherService.clearWeatherCache(user.location.district);
+    }
+
     res.clearCookie("token", {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
