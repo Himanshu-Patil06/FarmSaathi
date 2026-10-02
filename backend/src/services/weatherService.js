@@ -1,149 +1,94 @@
-const getWeatherConditionCode = (code) => {
-    const conditions = {
-        0: "Clear Sky",
-        1: "Mainly Clear",
-        2: "Partly Cloudy",
-        3: "Overcast",
+const getWeather = async (location) => {
+    console.log("In getWeather");
+    console.log("Location:", location);
 
-        45: "Fog",
-        48: "Fog",
+    const apiKey = process.env.WEATHER_API_KEY;
 
-        51: "Light Drizzle",
-        53: "Moderate Drizzle",
-        55: "Dense Drizzle",
-
-        61: "Light Rain",
-        63: "Moderate Rain",
-        65: "Heavy Rain",
-
-        71: "Light Snow",
-        73: "Moderate Snow",
-        75: "Heavy Snow",
-
-        80: "Light Rain Showers",
-        81: "Moderate Rain Showers",
-        82: "Heavy Rain Showers",
-
-        95: "Thunderstorm",
-        96: "Thunderstorm",
-        99: "Thunderstorm"
-    };
-
-    return conditions[code] || "Unknown";
-};
-
-const getCoordinates = async (location) => {
-    console.log("In getCorrdinats");
-
-    const district = location;
-    console.log("District: ", district);
+    if (!apiKey) {
+        throw new Error("WEATHER_API_KEY is not configured");
+    }
 
     const url =
-        `https://geocoding-api.open-meteo.com/v1/search` +
-        `?name=${encodeURIComponent(district)}` +
-        `&count=1` +
-        `&language=en` +
-        `&format=json`;
+        `https://api.weatherapi.com/v1/forecast.json` +
+        `?key=${apiKey}` +
+        `&q=${encodeURIComponent(location)}` +
+        `&days=7` +
+        `&aqi=no` +
+        `&alerts=no`;
+
+    console.log("Fetching weather data...");
 
     try {
-        console.log(" start feching coordinates ");
-
         const response = await fetch(url);
 
-        console.log(" complete feching coordinates ");
-        console.log("Response: ", response);
+        console.log("Weather fetch completed");
+        console.log("Weather status:", response.status);
+        console.log("Weather status text:", response.statusText);
+
         if (!response.ok) {
-            throw new Error(`Geocoding API returned ${response.status}`);
+            const errorText = await response.text();
+
+            console.error("WEATHER API ERROR:", errorText);
+
+            throw new Error(
+                `Weather API returned ${response.status}: ${errorText}`
+            );
         }
 
         const data = await response.json();
 
-        if (!data.results || data.results.length === 0) {
-            throw new Error("Location not found");
-        }
-        console.log("Coordinates: ", data.results[0].latitude, data.results[0].longitude);
+        console.log("Weather JSON received");
+
         return {
-            latitude: data.results[0].latitude,
-            longitude: data.results[0].longitude
+            current: {
+                temperature: data.current.temp_c,
+                humidity: data.current.humidity,
+                windSpeed: data.current.wind_kph,
+                condition: data.current.condition.text
+            },
+
+            dailyData: data.forecast.forecastday
         };
 
     } catch (error) {
-        console.error("GEOCODING ERROR:", error);
+        console.error("WEATHER ERROR:", error);
         throw error;
     }
 };
-
-const getWeather = async (location) => {
-    console.log("In getweather");
-
-
-    const { latitude, longitude } = await getCoordinates(location);
-    console.log("Coordinates: ", latitude, longitude);
-    const url = `https://api.open-meteo.com/v1/forecast` +
-        `?latitude=${latitude}` +
-        `&longitude=${longitude}` +
-        `&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m` +
-        `&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max` +
-        `&forecast_days=7` +
-        `&timezone=auto`;
-    console.log(" start feching weather data");
-
-    const response = await fetch(url);
-    console.log("Weather fetch completed");
-    console.log("Weather status:", response.status);
-    console.log("Weather status text:", response.statusText);
-    console.log("Weather URL:", url);
-    console.log("Weather OK:", response.ok);
-    console.log("Weather content type:", response.headers.get("content-type"));
-
-    if (!response.ok) {
-        const errorText = await response.text();
-
-        console.error("WEATHER API ERROR BODY:", errorText);
-
-        throw new Error(
-            `Weather API returned ${response.status}: ${errorText}`
-        );
-    }
-
-    console.log("Weather response received");
-
-    const data = await response.json();
-
-    console.log("Weather JSON received");
-
-    return {
-        current: {
-            temperature: data.current.temperature_2m,
-            humidity: data.current.relative_humidity_2m,
-            windSpeed: data.current.wind_speed_10m,
-            condition: getWeatherConditionCode(data.current.weather_code)
-        },
-
-        dailyData: data.daily
-    };
-};
-
-
 
 
 const getWeatherCondition = async (location) => {
 
     const weatherData = await getWeather(location);
+
     const weather = weatherData.dailyData;
 
     const conditions = [];
 
 
-    const maxRain = Math.max(...weather.precipitation_sum);
+    // -----------------------------
+    // RAINFALL
+    // -----------------------------
 
-    const rainIndex = weather.precipitation_sum.indexOf(maxRain);
+    let maxRain = 0;
+    let rainIndex = 0;
+
+    weather.forEach((day, index) => {
+
+        const rain = day.day.totalprecip_mm;
+
+        if (rain > maxRain) {
+            maxRain = rain;
+            rainIndex = index;
+        }
+    });
+
 
     if (maxRain > 20) {
 
         conditions.push({
             condition: "heavy_rain",
-            date: weather.time[rainIndex],
+            date: weather[rainIndex].date,
             value: maxRain
         });
 
@@ -151,7 +96,7 @@ const getWeatherCondition = async (location) => {
 
         conditions.push({
             condition: "moderate_rain",
-            date: weather.time[rainIndex],
+            date: weather[rainIndex].date,
             value: maxRain
         });
 
@@ -159,24 +104,35 @@ const getWeatherCondition = async (location) => {
 
         conditions.push({
             condition: "light_rain",
-            date: weather.time[rainIndex],
+            date: weather[rainIndex].date,
             value: maxRain
         });
     }
 
 
+    // -----------------------------
+    // RAIN PROBABILITY
+    // -----------------------------
 
-    const maxRainProbability =
-        Math.max(...weather.precipitation_probability_max);
+    let maxRainProbability = 0;
+    let probabilityIndex = 0;
 
-    const probabilityIndex =
-        weather.precipitation_probability_max.indexOf(maxRainProbability);
+    weather.forEach((day, index) => {
+
+        const probability = day.day.daily_chance_of_rain;
+
+        if (probability > maxRainProbability) {
+            maxRainProbability = probability;
+            probabilityIndex = index;
+        }
+    });
+
 
     if (maxRainProbability >= 80) {
 
         conditions.push({
             condition: "high_rain_probability",
-            date: weather.time[probabilityIndex],
+            date: weather[probabilityIndex].date,
             value: maxRainProbability
         });
 
@@ -184,24 +140,35 @@ const getWeatherCondition = async (location) => {
 
         conditions.push({
             condition: "rain_expected",
-            date: weather.time[probabilityIndex],
+            date: weather[probabilityIndex].date,
             value: maxRainProbability
         });
     }
 
 
-    const highestTemperature =
-        Math.max(...weather.temperature_2m_max);
+    // -----------------------------
+    // HIGHEST TEMPERATURE
+    // -----------------------------
 
-    const highestTempIndex =
-        weather.temperature_2m_max.indexOf(highestTemperature);
+    let highestTemperature = -Infinity;
+    let highestTempIndex = 0;
+
+    weather.forEach((day, index) => {
+
+        const temperature = day.day.maxtemp_c;
+
+        if (temperature > highestTemperature) {
+            highestTemperature = temperature;
+            highestTempIndex = index;
+        }
+    });
 
 
     if (highestTemperature >= 35) {
 
         conditions.push({
             condition: "very_high_temperature",
-            date: weather.time[highestTempIndex],
+            date: weather[highestTempIndex].date,
             value: highestTemperature
         });
 
@@ -209,24 +176,35 @@ const getWeatherCondition = async (location) => {
 
         conditions.push({
             condition: "high_temperature",
-            date: weather.time[highestTempIndex],
+            date: weather[highestTempIndex].date,
             value: highestTemperature
         });
     }
 
 
-    const lowestTemperature =
-        Math.min(...weather.temperature_2m_min);
+    // -----------------------------
+    // LOWEST TEMPERATURE
+    // -----------------------------
 
-    const lowestTempIndex =
-        weather.temperature_2m_min.indexOf(lowestTemperature);
+    let lowestTemperature = Infinity;
+    let lowestTempIndex = 0;
+
+    weather.forEach((day, index) => {
+
+        const temperature = day.day.mintemp_c;
+
+        if (temperature < lowestTemperature) {
+            lowestTemperature = temperature;
+            lowestTempIndex = index;
+        }
+    });
 
 
     if (lowestTemperature < 15) {
 
         conditions.push({
             condition: "very_low_temperature",
-            date: weather.time[lowestTempIndex],
+            date: weather[lowestTempIndex].date,
             value: lowestTemperature
         });
 
@@ -234,7 +212,7 @@ const getWeatherCondition = async (location) => {
 
         conditions.push({
             condition: "low_temperature",
-            date: weather.time[lowestTempIndex],
+            date: weather[lowestTempIndex].date,
             value: lowestTemperature
         });
 
@@ -242,7 +220,7 @@ const getWeatherCondition = async (location) => {
 
         conditions.push({
             condition: "normal_temperature",
-            date: weather.time[0],
+            date: weather[0].date,
             value: lowestTemperature
         });
     }
@@ -251,4 +229,8 @@ const getWeatherCondition = async (location) => {
     return conditions;
 };
 
-module.exports = { getWeather, getWeatherCondition }
+
+module.exports = {
+    getWeather,
+    getWeatherCondition
+};
