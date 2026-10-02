@@ -27,6 +27,19 @@ app.use("/crop", cropRoutes)
 app.use("/weather", weatherRoutes)
 app.use("/recommendation", recommendationRoutes)
 
+app.get("/test-weather", async (req, res) => {
+    try {
+        const response = await fetch(
+            "https://api.open-meteo.com/v1/forecast?latitude=19.69693&longitude=72.76543&current=temperature_2m"
+        );
+
+        const data = await response.text();
+
+        res.status(response.status).send(data);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
 
 connectDB()
 
