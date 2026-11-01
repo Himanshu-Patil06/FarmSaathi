@@ -5,8 +5,10 @@ import Navbar from "../Components/Navbar";
 
 import "./AddCrop.css";
 import Notification from "../Components/Notification";
+import { useLanguage } from "../LanguageContext";
 
 function AddCrop() {
+  const { t } = useLanguage();
   const navigate = useNavigate();
 
   const [cropName, setCropName] = useState("");
@@ -20,7 +22,7 @@ function AddCrop() {
     e.preventDefault();
 
     if (!cropName || !plantingDate) {
-      alert("Please select crop and planting date.");
+      alert(t("Please select crop and planting date."));
       return;
     }
 
@@ -46,19 +48,19 @@ function AddCrop() {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.message || "Login failed");
+        setError(data.message || t("Login failed"));
         return;
       }
       setNotification({
-        message: "Crop added successfully!",
+        message: t("Crop added successfully!"),
         type: "success",
       });
       setTimeout(() => {
         navigate("/dashboard");
       }, 1000);
       // Login successful
-    } catch (error) {
-      setError("Unable to connect to server");
+    } catch {
+      setError(t("Unable to connect to server"));
     } finally {
       setLoading(false);
     }
@@ -77,32 +79,31 @@ function AddCrop() {
       <main className="add-crop-container">
         <div className="add-crop-header">
           <Link to="/dashboard" className="back-link">
-            ← Back to Dashboard
+            {t("← Back to Dashboard")}
           </Link>
 
           <div className="crop-title">
             <div className="crop-icon">🌱</div>
 
             <div>
-              <h1>Add Your Crop</h1>
-              <p>Tell us about the crop you are currently growing.</p>
+              <h1>{t("Add Your Crop")}</h1>
+              <p>{t("Tell us about the crop you are currently growing.")}</p>
             </div>
           </div>
         </div>
 
         <div className="add-crop-card">
           <div className="card-heading">
-            <h2>Crop Details</h2>
+            <h2>{t("Crop Details")}</h2>
             <p>
-              This information helps FarmSaathi provide crop-stage and
-              weather-based advice.
+              {t("This information helps FarmSaathi provide crop-stage and weather-based advice.")}
             </p>
           </div>
           {error && <div className="error-message">{error}</div>}
 
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label htmlFor="crop">Select Crop</label>
+              <label htmlFor="crop">{t("Select Crop")}</label>
 
               <select
                 id="crop"
@@ -110,18 +111,18 @@ function AddCrop() {
                 onChange={(e) => setCropName(e.target.value)}
                 required
               >
-                <option value="">Select your crop</option>
-                <option value="Rice">Rice</option>
-                <option value="Tomato">Tomato</option>
-                <option value="Chilli">Chilli</option>
-                <option value="Brinjal">Brinjal</option>
-                <option value="Wheat">Wheat</option>
-                <option value="Corn">Corn</option>
+                <option value="">{t("Select your crop")}</option>
+                <option value="Rice">{t("Rice")}</option>
+                <option value="Tomato">{t("Tomato")}</option>
+                <option value="Chilli">{t("Chilli")}</option>
+                <option value="Brinjal">{t("Brinjal")}</option>
+                <option value="Wheat">{t("Wheat")}</option>
+                <option value="Corn">{t("Corn")}</option>
               </select>
             </div>
 
             <div className="form-group">
-              <label htmlFor="plantingDate">Planting Date</label>
+              <label htmlFor="plantingDate">{t("Planting Date")}</label>
 
               <input
                 type="date"
@@ -131,15 +132,14 @@ function AddCrop() {
                 required
               />
 
-              <small>Enter the date when you planted this crop.</small>
+              <small>{t("Enter the date when you planted this crop.")}</small>
             </div>
 
             <div className="crop-info">
               <span>💡</span>
 
               <p>
-                FarmSaathi uses your planting date to determine the current
-                growth stage of your crop.
+                {t("FarmSaathi uses your planting date to determine the current growth stage of your crop.")}
               </p>
             </div>
 
@@ -148,7 +148,7 @@ function AddCrop() {
               className="primary-btn add-crop-btn"
               disabled={loading}
             >
-              {loading ? "Adding Crop..." : "🌱 Add Crop"}
+              {loading ? t("Adding Crop...") : t("🌱 Add Crop")}
             </button>
           </form>
         </div>

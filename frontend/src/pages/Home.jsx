@@ -1,8 +1,9 @@
-import { Link } from "react-router-dom";
 import "./Home.css";
 import Navbar from "../Components/Navbar";
+import { useLanguage } from "../LanguageContext";
 
 function Home() {
+    const { t } = useLanguage();
     return (
         <div className="home-page">
 
@@ -14,18 +15,16 @@ function Home() {
                 <div className="hero-content">
 
                     <p className="hero-tagline">
-                        Smart Farming, Simple Decisions
+                        {t("Smart Farming, Simple Decisions")}
                     </p>
 
                     <h1>
-                        Farm smarter with your
-                        <span> FarmSaathi 🌱</span>
+                        {t("Farm smarter with your")}
+                        <span> {t("FarmSaathi 🌱")}</span>
                     </h1>
 
                     <p className="hero-description">
-                        FarmSaathi helps farmers understand their crop
-                        growth and make better decisions using local
-                        weather information and crop-based recommendations.
+                        {t("FarmSaathi helps farmers understand their crop growth and make better decisions using local weather information and crop-based recommendations.")}
                     </p>
 
                 </div>
@@ -41,16 +40,15 @@ function Home() {
             <section className="features">
 
                 <p className="section-tag">
-                    FARM MANAGEMENT
+                    {t("FARM MANAGEMENT")}
                 </p>
 
                 <h2>
-                    Everything you need to understand your crops
+                    {t("Everything you need to understand your crops")}
                 </h2>
 
                 <p className="section-description">
-                    Keep your crop information in one place and get
-                    useful information based on weather and crop growth.
+                    {t("Keep your crop information in one place and get useful information based on weather and crop growth.")}
                 </p>
 
 
@@ -63,12 +61,11 @@ function Home() {
                         </div>
 
                         <h3>
-                            Weather Information
+                            {t("Weather Information")}
                         </h3>
 
                         <p>
-                            View current weather conditions and upcoming
-                            weather information for your location.
+                            {t("View current weather conditions and upcoming weather information for your location.")}
                         </p>
 
                     </div>
@@ -81,12 +78,11 @@ function Home() {
                         </div>
 
                         <h3>
-                            Track Your Crops
+                            {t("Track Your Crops")}
                         </h3>
 
                         <p>
-                            Add your crops, record planting dates, and
-                            follow their growth stages over time.
+                            {t("Add your crops, record planting dates, and follow their growth stages over time.")}
                         </p>
 
                     </div>
@@ -99,12 +95,11 @@ function Home() {
                         </div>
 
                         <h3>
-                            Crop Recommendations
+                            {t("Crop Recommendations")}
                         </h3>
 
                         <p>
-                            Get recommendations based on your crop's
-                            current growth stage and weather conditions.
+                            {t("Get recommendations based on your crop's current growth stage and weather conditions.")}
                         </p>
 
                     </div>
@@ -118,11 +113,11 @@ function Home() {
             <section className="how-it-works">
 
                 <p className="section-tag">
-                    HOW IT WORKS
+                    {t("HOW IT WORKS")}
                 </p>
 
                 <h2>
-                    Simple steps for better crop management
+                    {t("Simple steps for better crop management")}
                 </h2>
 
                 <div className="steps">
@@ -134,11 +129,11 @@ function Home() {
                         </span>
 
                         <h3>
-                            Add Your Crop
+                            {t("Add Your Crop")}
                         </h3>
 
                         <p>
-                            Select your crop and provide its planting date.
+                            {t("Select your crop and provide its planting date.")}
                         </p>
 
                     </div>
@@ -151,12 +146,11 @@ function Home() {
                         </span>
 
                         <h3>
-                            Check the Weather
+                            {t("Check the Weather")}
                         </h3>
 
                         <p>
-                            See weather conditions and upcoming forecasts
-                            for your location.
+                            {t("See weather conditions and upcoming forecasts for your location.")}
                         </p>
 
                     </div>
@@ -169,12 +163,11 @@ function Home() {
                         </span>
 
                         <h3>
-                            Get Recommendations
+                            {t("Get Recommendations")}
                         </h3>
 
                         <p>
-                            Receive useful recommendations according to
-                            your crop stage and weather.
+                            {t("Receive useful recommendations according to your crop stage and weather.")}
                         </p>
 
                     </div>
@@ -188,12 +181,11 @@ function Home() {
             <section className="home-footer">
 
                 <h2>
-                    Your crops. Your weather. Your FarmSaathi.
+                    {t("Your crops. Your weather. Your FarmSaathi.")}
                 </h2>
 
                 <p>
-                    Keep track of your crops and stay informed throughout
-                    their growth.
+                    {t("Keep track of your crops and stay informed throughout their growth.")}
                 </p>
 
             </section>

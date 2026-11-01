@@ -4,7 +4,7 @@
 .dashboard-page {
     min-height: 100vh;
 
-    background-color: #f6f8f4;
+    background-color: #eef1e8;
 }
 
 .dashboard {
@@ -85,9 +85,9 @@
 ========================= */
 
 .weather-card {
-    background: white;
+    background: #f7f8f1;
 
-    border: 1px solid #e8e8e8;
+    border: 1px solid #e0e5d9;
     border-radius: 16px;
 
     padding: 25px 28px;
@@ -241,9 +241,9 @@
 ========================= */
 
 .crop-card {
-    background: white;
+    background: #f7f8f1;
 
-    border: 1px solid #e8e8e8;
+    border: 1px solid #e0e5d9;
     border-radius: 16px;
 
     padding: 22px 25px;

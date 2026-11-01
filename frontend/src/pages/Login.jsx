@@ -3,7 +3,10 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Login.css";
 import Notification from "../Components/Notification";
+import LanguageToggle from "../Components/LanguageToggle";
+import { useLanguage } from "../LanguageContext";
 function Login() {
+  const { t } = useLanguage();
   const navigate = useNavigate();
 
   const [mobile, setMobile] = useState("");
@@ -40,20 +43,20 @@ function Login() {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.message || "Login failed");
+        setError(data.message || t("Login failed"));
         return;
       }
 
       setNotification({
-        message: "Login successful!",
+        message: t("Login successful!"),
         type: "success",
       });
 
       setTimeout(() => {
         navigate("/dashboard");
       }, 1000);
-    } catch (error) {
-      setError("Unable to connect to server");
+    } catch {
+      setError(t("Unable to connect to server"));
     } finally {
       setLoading(false);
     }
@@ -71,24 +74,25 @@ function Login() {
 
       <div className="auth-card">
         <Link to="/" className="back-link">
-          ← Home
+          {t("← Home")}
         </Link>
+        <LanguageToggle className="auth-language-toggle" />
 
         <div className="auth-logo">🌾</div>
 
-        <h1>Welcome Back</h1>
+        <h1>{t("Welcome Back")}</h1>
 
-        <p className="auth-subtitle">Login to your FarmSaathi account</p>
+        <p className="auth-subtitle">{t("Login to your FarmSaathi account")}</p>
 
         {error && <div className="error-message">{error}</div>}
 
         <form onSubmit={handleLogin}>
           <div className="form-group">
-            <label>Mobile Number</label>
+            <label>{t("Mobile Number")}</label>
 
             <input
               type="tel"
-              placeholder="Enter mobile number"
+              placeholder={t("Enter mobile number")}
               value={mobile}
               onChange={(e) => setMobile(e.target.value)}
               required
@@ -96,11 +100,11 @@ function Login() {
           </div>
 
           <div className="form-group">
-            <label>Password</label>
+            <label>{t("Password")}</label>
             <div className="password-wrapper">
               <input
                 type={showPassword ? "text" : "password"}
-                placeholder="Enter password"
+                placeholder={t("Enter password")}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -110,7 +114,7 @@ function Login() {
                 className="show-password-btn"
                 onClick={() => setShowPassword(!showPassword)}
               >
-                {showPassword ? "Hide" : "Show"}
+                {showPassword ? t("Hide") : t("Show")}
               </button>
             </div>
           </div>
@@ -120,12 +124,12 @@ function Login() {
             className="primary-btn auth-btn"
             disabled={loading}
           >
-            {loading ? "Logging in..." : "Login"}
+            {loading ? t("Logging in...") : t("Login")}
           </button>
         </form>
 
         <p className="auth-footer">
-          Don't have an account? <Link to="/register">Sign Up</Link>
+          {t("Don't have an account?")} <Link to="/register">{t("Sign Up")}</Link>
         </p>
       </div>
     </div>

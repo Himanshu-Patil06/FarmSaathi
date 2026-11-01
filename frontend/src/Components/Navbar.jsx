@@ -4,8 +4,11 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 import { useEffect } from "react";
 import Notification from "./Notification";
+import LanguageToggle from "./LanguageToggle";
+import { useLanguage } from "../LanguageContext";
 
 const Navbar = () => {
+  const { t } = useLanguage();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -56,7 +59,7 @@ const Navbar = () => {
         throw new Error(data.message || "Logout failed");
       }
       setNotification({
-        message: "Logout successful!",
+        message: t("Logout successful!"),
         type: "success",
       });
 
@@ -85,7 +88,7 @@ const Navbar = () => {
       <button
         className="menu-btn"
         onClick={() => setMenuOpen(!menuOpen)}
-        aria-label="Toggle menu"
+        aria-label={t("Toggle menu")}
       >
         {menuOpen ? "✕" : "☰"}
       </button>
@@ -93,12 +96,13 @@ const Navbar = () => {
       {/* Navigation */}
       {!loading && user ? (
         <div className={`nav-links ${menuOpen ? "menu-open" : ""}`}>
+          <LanguageToggle />
           <Link
             to="/"
             className={location.pathname === "/" ? "active" : ""}
             onClick={closeMenu}
           >
-            Home
+            {t("Home")}
           </Link>
 
           <Link
@@ -106,21 +110,22 @@ const Navbar = () => {
             className={location.pathname === "/dashboard" ? "active" : ""}
             onClick={closeMenu}
           >
-            Dashboard
+            {t("Dashboard")}
           </Link>
 
           <button className="logout-btn" onClick={handleLogout}>
-            Logout
+            {t("Logout")}
           </button>
         </div>
       ) : (
         <div className={`nav-links ${menuOpen ? "menu-open" : ""}`}>
+          <LanguageToggle />
           <Link to="/" onClick={() => setMenuOpen(false)}>
-            Home
+            {t("Home")}
           </Link>
 
           <Link to="/login" onClick={() => setMenuOpen(false)}>
-            Login
+            {t("Login")}
           </Link>
 
           <Link
@@ -128,7 +133,7 @@ const Navbar = () => {
             className="signup-btn"
             onClick={() => setMenuOpen(false)}
           >
-            Sign Up
+            {t("Sign Up")}
           </Link>
         </div>
       )}

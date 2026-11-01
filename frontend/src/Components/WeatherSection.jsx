@@ -1,7 +1,9 @@
 import API_URL from "../Api/api";
 import { useEffect, useState } from "react";
 import "./WeatherSection.css";
+import { useLanguage } from "../LanguageContext";
 const WeatherSection = () => {
+  const { t } = useLanguage();
   const [weather, setWeather] = useState(null);
   const [loading, setLoading] = useState(true);
   const getWeather = async () => {
@@ -28,7 +30,7 @@ const WeatherSection = () => {
   }, []);
 
   if (loading) {
-    return <h2>Loading...</h2>;
+    return <h2>{t("Loading...")}</h2>;
   }
 
   const { temperature, humidity, windSpeed, condition } = weather.current;
@@ -39,7 +41,7 @@ const WeatherSection = () => {
         <div className="temperature">{temperature}°C</div>
 
         <div className="weather-condition">
-          <span>{condition}</span>
+          <span>{t(condition)}</span>
         </div>
       </div>
 
@@ -48,7 +50,7 @@ const WeatherSection = () => {
           <span className="detail-icon">💧</span>
 
           <div>
-            <small>Humidity</small>
+            <small>{t("Humidity")}</small>
             <strong>{humidity}</strong>
           </div>
         </div>
@@ -57,7 +59,7 @@ const WeatherSection = () => {
           <span className="detail-icon">💨</span>
 
           <div>
-            <small>Wind</small>
+            <small>{t("Wind")}</small>
             <strong>{windSpeed}</strong>
           </div>
         </div>

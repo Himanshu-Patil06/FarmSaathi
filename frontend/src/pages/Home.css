@@ -1,6 +1,6 @@
 .home-page {
     min-height: 100vh;
-    background: #f7faf7;
+    background: #eef1e8;
     color: #263326;
 }
 
@@ -93,7 +93,7 @@
 ========================= */
 
 .features {
-    background: white;
+    background: #f0f3eb;
     padding: 80px 40px;
     text-align: center;
 }
@@ -128,7 +128,7 @@
     padding: 30px 25px;
     border: 1px solid #e2e9e2;
     border-radius: 12px;
-    background: #fbfdfb;
+    background: #f8f9f3;
 
     text-align: left;
 
@@ -149,7 +149,7 @@
     align-items: center;
     justify-content: center;
 
-    background: #e8f3e8;
+    background: #e3ebdc;
     border-radius: 10px;
 
     font-size: 28px;

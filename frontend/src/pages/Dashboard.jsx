@@ -5,8 +5,10 @@ import "./Dashboard.css";
 import WeatherSection from "../Components/WeatherSection";
 import CropSection from "../Components/CropSection";
 import { useEffect, useState } from "react";
+import { useLanguage } from "../LanguageContext";
 
 function Dashboard() {
+  const { t } = useLanguage();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -40,7 +42,7 @@ function Dashboard() {
       <div className="dashboard-page">
         <Navbar />
         <div className="loading-state">
-          <p>Loading dashboard...</p>
+          <p>{t("Loading dashboard...")}</p>
         </div>
       </div>
     );
@@ -53,8 +55,8 @@ function Dashboard() {
         {/* HEADER */}
         <div className="dashboard-header">
           <div>
-            <h1>Hello, {user.user.name} 👋</h1>
-            <p>Here is your farm update for today.</p>
+            <h1>{t("Hello, {name} 👋", { name: user.user.name })}</h1>
+            <p>{t("Here is your farm update for today.")}</p>
           </div>
 
           <div className="location">
@@ -69,7 +71,7 @@ function Dashboard() {
         <div className="dashboard-section">
           <div className="section-title">
             <span>🌦️</span>
-            <h2>Weather</h2>
+            <h2>{t("Weather")}</h2>
           </div>
           <WeatherSection />
         </div>
@@ -79,11 +81,11 @@ function Dashboard() {
           <div className="crops-section-heading">
             <div className="section-title">
               <span>🌱</span>
-              <h2>My Crops</h2>
+              <h2>{t("My Crops")}</h2>
             </div>
 
             <Link to="/add-crop" className="primary-btn">
-              + Add Crop
+              {t("+ Add Crop")}
             </Link>
           </div>
           <CropSection />

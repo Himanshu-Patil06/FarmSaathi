@@ -80,9 +80,9 @@
 ========================= */
 
 .crop-card {
-    background: #ffffff;
+    background: #f7f8f1;
 
-    border: 1px solid #e8e8e8;
+    border: 1px solid #e0e5d9;
 
     border-radius: 16px;
 
@@ -227,7 +227,7 @@
 
     background: #e0e0e0;
 
-    border: 3px solid white;
+    border: 3px solid #f7f8f1;
 
     border-radius: 50%;
 
@@ -279,7 +279,7 @@
     background-color: #ffcdd2;
 }
 .no-crops {
-    background: #f8fbf8;
+    background: #f2f5ed;
     border: 1px solid #dfe9df;
     border-radius: 10px;
     padding: 30px 20px;

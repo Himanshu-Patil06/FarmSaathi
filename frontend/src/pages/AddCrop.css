@@ -4,7 +4,7 @@
 
 .add-crop-page {
     min-height: 100vh;
-    background: #f6f8f4;
+    background: #eef1e8;
 }
 
 /* =========================
@@ -60,7 +60,7 @@
 ========================= */
 
 .add-crop-card {
-    background: white;
+    background: #f7f8f1;
     border-radius: 14px;
     padding: 32px;
     box-shadow: 0 6px 25px rgba(0, 0, 0, 0.07);

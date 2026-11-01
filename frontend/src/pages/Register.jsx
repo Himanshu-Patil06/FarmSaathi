@@ -4,8 +4,11 @@ import { Link, useNavigate } from "react-router-dom";
 import "./Register.css";
 import Notification from "../Components/Notification";
 import { states } from "../Data/locations";
+import LanguageToggle from "../Components/LanguageToggle";
+import { useLanguage } from "../LanguageContext";
 
 function Register() {
+  const { t, setLanguage, language } = useLanguage();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -15,7 +18,7 @@ function Register() {
     village: "",
     district: "",
     state: "",
-    language: "mr",
+    language,
   });
 
   const [error, setError] = useState("");
@@ -31,6 +34,10 @@ function Register() {
       ...formData,
       [name]: value,
     });
+
+    if (name === "language") {
+      setLanguage(value);
+    }
   };
 
   const handleStateChange = (e) => {
@@ -73,20 +80,20 @@ function Register() {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.message || "Registration failed");
+        setError(data.message || t("Registration failed"));
 
         return;
       }
       setNotification({
-        message: "Registration successful!",
+        message: t("Registration successful!"),
         type: "success",
       });
 
       setTimeout(() => {
         navigate("/login");
       }, 1000);
-    } catch (error) {
-      setError("Unable to connect to server");
+    } catch {
+      setError(t("Unable to connect to server"));
     } finally {
       setLoading(false);
     }
@@ -103,13 +110,14 @@ function Register() {
       )}
       <div className="auth-card register-card">
         <Link to="/" className="back-link">
-          ← Home
+          {t("← Home")}
         </Link>
+        <LanguageToggle className="auth-language-toggle" />
         <div className="auth-logo">🌾</div>
 
-        <h1>Create Account</h1>
+        <h1>{t("Create Account")}</h1>
 
-        <p className="auth-subtitle">Join FarmSaathi</p>
+        <p className="auth-subtitle">{t("Join FarmSaathi")}</p>
 
         {error && <div className="error-message">{error}</div>}
 
@@ -117,12 +125,12 @@ function Register() {
           {/* Name */}
 
           <div className="form-group">
-            <label>Full Name</label>
+            <label>{t("Full Name")}</label>
 
             <input
               type="text"
               name="name"
-              placeholder="Enter your name"
+              placeholder={t("Enter your name")}
               value={formData.name}
               onChange={handleChange}
               required
@@ -132,16 +140,16 @@ function Register() {
           {/* Mobile */}
 
           <div className="form-group">
-            <label>Mobile Number</label>
+            <label>{t("Mobile Number")}</label>
 
             <input
               type="tel"
               name="mobile"
-              placeholder="Enter mobile number"
+              placeholder={t("Enter mobile number")}
               value={formData.mobile}
               onChange={handleChange}
               pattern="[0-9]{10}"
-              title="Please enter a valid 10-digit mobile number."
+              title={t("Please enter a valid 10-digit mobile number.")}
               maxLength="10"
               inputMode="numeric"
               required
@@ -151,17 +159,17 @@ function Register() {
           {/* Password */}
 
           <div className="form-group">
-            <label>Password</label>
+            <label>{t("Password")}</label>
 
             <div className="password-wrapper">
               <input
                 type={showPassword ? "text" : "password"}
                 name="password"
-                placeholder="Create password"
+                placeholder={t("Create password")}
                 value={formData.password}
                 onChange={handleChange}
                 pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}"
-                title="Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number and one special character."
+                title={t("Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number and one special character.")}
                 required
               />
 
@@ -170,14 +178,14 @@ function Register() {
                 className="show-password-btn"
                 onClick={() => setShowPassword(!showPassword)}
               >
-                {showPassword ? "Hide" : "Show"}
+                {showPassword ? t("Hide") : t("Show")}
               </button>
             </div>
           </div>
 
           {/* State */}
           <div className="form-group">
-            <label>State</label>
+            <label>{t("State")}</label>
 
             <select
               name="state"
@@ -185,11 +193,11 @@ function Register() {
               onChange={handleStateChange}
               required
             >
-              <option value="">Select State</option>
+              <option value="">{t("Select State")}</option>
 
               {Object.keys(states).map((state) => (
                 <option key={state} value={state}>
-                  {state}
+                  {t(state)}
                 </option>
               ))}
             </select>
@@ -198,7 +206,7 @@ function Register() {
           {/* District */}
 
           <div className="form-group">
-            <label>District</label>
+            <label>{t("District")}</label>
 
             <select
               name="district"
@@ -208,13 +216,13 @@ function Register() {
               required
             >
               <option value="">
-                {formData.state ? "Select District" : "Select State First"}
+                {formData.state ? t("Select District") : t("Select State First")}
               </option>
 
               {formData.state &&
                 states[formData.state].map((district) => (
                   <option key={district} value={district}>
-                    {district}
+                    {t(district)}
                   </option>
                 ))}
             </select>
@@ -223,12 +231,12 @@ function Register() {
           {/* Village */}
 
           <div className="form-group">
-            <label>Village</label>
+            <label>{t("Village")}</label>
 
             <input
               type="text"
               name="village"
-              placeholder="Enter village"
+              placeholder={t("Enter village")}
               value={formData.village}
               onChange={handleChange}
               required
@@ -238,7 +246,7 @@ function Register() {
           {/* Language */}
 
           <div className="form-group">
-            <label>Preferred Language</label>
+            <label>{t("Preferred Language")}</label>
 
             <select
               name="language"
@@ -258,12 +266,12 @@ function Register() {
             className="primary-btn auth-btn"
             disabled={loading}
           >
-            {loading ? "Creating Account..." : "Create Account"}
+            {loading ? t("Creating Account...") : t("Create Account")}
           </button>
         </form>
 
         <p className="auth-footer">
-          Already have an account? <Link to="/login">Login</Link>
+          {t("Already have an account?")} <Link to="/login">{t("Login")}</Link>
         </p>
       </div>
     </div>

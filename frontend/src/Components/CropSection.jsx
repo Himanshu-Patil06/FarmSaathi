@@ -2,8 +2,10 @@ import API_URL from "../Api/api";
 import { useEffect, useState } from "react";
 import "./CropSection.css"
 import RecommendationSection from "./RecommendationSection";
+import { useLanguage } from "../LanguageContext";
 
 const CropSection = () => {
+    const { t } = useLanguage();
     const cropIcons = {
     Rice: "🌾",
     Tomato: "🍅",
@@ -113,7 +115,7 @@ const stageIndexes = {
         
   
          if (loading) {
-            return <h2>Loading...</h2>;
+            return <h2>{t("Loading...")}</h2>;
         }
 
   return (
@@ -121,10 +123,9 @@ const stageIndexes = {
 
 {crops.length===0?(
 <div className="no-crops">
-        <h3>No crops added yet</h3>
+        <h3>{t("No crops added yet")}</h3>
         <p>
-            Add a crop to start tracking its growth and get
-            weather-based recommendations.
+            {t("Add a crop to start tracking its growth and get weather-based recommendations.")}
         </p>
     </div>
 ):(
@@ -143,8 +144,8 @@ const stageIndexes = {
                                     </span>
 
                                     <div>
-                                        <h3>{crop.name}</h3>
-                                        <p>{crop.currentStage.stage}</p>
+                                        <h3>{t(crop.name)}</h3>
+                                        <p>{t(crop.currentStage.stage)}</p>
                                     </div>
 
                                 </div>
@@ -152,13 +153,13 @@ const stageIndexes = {
 
                                 <div className="crop-days">
                                     <strong>{crop.currentStage.days}</strong>
-                                    <span>Days</span>
+                                    <span>{t("Days")}</span>
                                 </div>
                                 <div>
                                     <button
                                         className="delete-crop-btn"
                                         onClick={() => handleDelete(crop.id)}>
-                                        Delete
+                                        {t("Delete")}
                                     </button>
                                 </div>
 
@@ -169,7 +170,7 @@ const stageIndexes = {
                             <div className="growth-section">
 
                                 <p className="growth-title">
-                                    Growth Stage
+                                    {t("Growth Stage")}
                                 </p>
 
                                 <div className="growth-stage">
@@ -184,7 +185,7 @@ const stageIndexes = {
                                         }`}
                                     >
                                         <span></span>
-                                        <small>Seedling</small>
+                                        <small>{t("Seedling")}</small>
                                     </div>
 
 
@@ -196,7 +197,7 @@ const stageIndexes = {
                                         }`}
                                     >
                                         <span></span>
-                                        <small>Vegetative</small>
+                                        <small>{t("Vegetative")}</small>
                                     </div>
 
 
@@ -208,7 +209,7 @@ const stageIndexes = {
                                         }`}
                                     >
                                         <span></span>
-                                        <small>Flowering</small>
+                                        <small>{t("Flowering")}</small>
                                     </div>
 
 
@@ -220,7 +221,7 @@ const stageIndexes = {
                                         }`}
                                     >
                                         <span></span>
-                                        <small>Maturity</small>
+                                        <small>{t("Maturity")}</small>
                                     </div>
 
                                 </div>
